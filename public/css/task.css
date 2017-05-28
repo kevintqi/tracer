@@ -1,0 +1,63 @@
+html,
+body {
+    height: 100%;
+    background-color: lightblue;
+}
+
+body {
+    display: table;
+    margin: auto;
+    height: 100%;
+    width: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.task {
+    margin: 0px;
+    margin-top: 0%;
+    margin-left: 10%;
+}
+
+.task .title_bar {
+    width: 100%;
+    margin-left: 0%;
+    display: inline-block;
+    text-align: left;
+    margin-top: 0%;
+    font-size: 100%;
+    color: blue;
+}
+
+.task .list {
+    font-family: calibri, arial;
+    width: 750px;
+    margin-left: 0%;
+    margin-top: 0%;
+    text-align: left;
+    border-collapse: collapse;
+}
+
+img {
+    display: block;
+    margin: 0 auto;
+}
+
+.task .list #list_table_id tbody td {
+    height: 100px;
+    padding: 5px;
+    border-bottom: 1px solid #ddd;
+}
+
+.task .list #list_table_id tr:hover {
+    background-color: #ddd;
+}
+
+.thumbnail, .time, .assignment {
+    width: 100px;
+}
+
+.address {
+    width: 450px;
+}
