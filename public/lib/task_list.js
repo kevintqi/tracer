@@ -17,7 +17,7 @@ $(document).ready(function() {
                     sorting: true
                 },
                 inputs: {
-                    processingText: 'Loading <img src="images/loading.gif" />'
+                    processingText: 'Loading <img src="images/loading.gif"/>'
                 },
                 dataset: {
                     records: taskData
