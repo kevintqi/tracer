@@ -16,8 +16,8 @@ th a:hover {
   text-decoration: underline;
 }
 .dynatable-search {
-  float: center;
-  margin-bottom: 0px;
+  float: right;
+  margin-bottom: 10px;
 }
 
 .dynatable-pagination-links {

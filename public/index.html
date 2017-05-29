@@ -2,25 +2,25 @@
 <html>
 
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="css/w3.css" rel="stylesheet" />
 	<link href="css/task.css" rel="stylesheet" type="text/css" />
 	<link href="css/jquery.dynatable.css" rel="stylesheet" type="text/css" />
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 	<script src="lib/jquery.dynatable.js"></script>
 	<script src="lib/task_list.js"></script>
-
 	<title>Tracker</title>
 </head>
 
 <body>
 	<div class="task">
 		<div id="list_view_id" class="list_view">
-			<div class="title_bar">
+			<header class="w3-container w3-panel">
 				<h2 id="title_id"> Tasks </h2>
-			</div>
+			</header>
 			<div class="list">
-				<table id="list_table_id">
-					<thead style="display: none">
+				<table id="list_table_id" class="w3-table">
+					<thead class="w3-blue">
 						<th class="thumbnail">Thumbnail</th>
 						<th class="address">Address</th>
 						<th class="time">Scheduled Time</th>

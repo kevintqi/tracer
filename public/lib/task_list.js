@@ -4,7 +4,7 @@ function taskRowWriter(rowIndex, record, columns, cellWriter) {
     row += '<td class="address">' + record.address + '</td>';
     row += '<td class="time">' + record.scheduledTime + '</td>';
     row += '<td class="assignment">' + record.assignment + '</td>';
-    return '<tr>' + row + '</tr>';
+    return '<tr class="w3-border-bottom">' + row + '</tr>';
 }
 
 $(document).ready(function() {
