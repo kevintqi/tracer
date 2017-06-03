@@ -6,33 +6,18 @@
     <link href="css/w3.css" rel="stylesheet" />
 	<link href="css/task.css" rel="stylesheet" type="text/css" />
 	<link href="css/jquery.dynatable.css" rel="stylesheet" type="text/css" />
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
+    <!-- script src="https://code.jquery.com/jquery-1.11.3.min.js"></script -->
+    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
 	<script src="lib/jquery.dynatable.js"></script>
 	<script src="lib/task_list.js"></script>
 	<title>Tracker</title>
 </head>
 
-<body>
-	<div class="task">
-		<div id="list_view_id" class="list_view">
-			<header class="w3-container w3-panel">
-				<h2 id="title_id"> Tasks </h2>
-			</header>
-			<div class="list">
-				<table id="list_table_id" class="w3-table">
-					<thead class="w3-blue">
-						<th class="thumbnail">Thumbnail</th>
-						<th class="address">Address</th>
-						<th class="time">Scheduled Time</th>
-						<th class="assignment">Assignment</th>
-						<th style="display: none">Distance</th>
-					</thead>
-					<tbody>
-					</tbody>
-				</table>
-			</div>
-		</div>
-	</div>
+<body ng-app="taskApp">
+	<div ng-view></div>
 </body>
 
 </html>

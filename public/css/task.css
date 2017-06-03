@@ -1,16 +1,12 @@
 html,
 body {
     height: 100%;
-    /*background-color:lightblue;*/
-}
-
-.task {
     margin-top: 0%;
     margin-left: 0%;
     font-family: calibri, arial;
 }
 
-.task .list #list_table_id tr:hover {
+#list_table_id tr:hover {
     background-color: #ddd;
 }
 
