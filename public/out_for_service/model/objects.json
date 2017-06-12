@@ -1,0 +1,43 @@
+{
+	"center": {
+		"lat": 34.1022,
+		"lng": -118.2737
+	},
+	"objects": [{
+		"uid": 1,
+		"name": "Joe",
+		"icon": "images/joe.png",
+		"position": {
+			"lat": 34.0723,
+			"lng": -118.2436
+		},
+		"destination": "17985 Pacific Coast Hwy, Pacific Palisades, CA 90272",
+		"status": "grey",
+		"startTime": 1234567,
+		"endTime": 0
+	}, {
+		"uid": 2,
+		"name": "Jose",
+		"icon": "images/jose.jpg",
+		"position": {
+			"lat": 34.0825,
+			"lng": -118.2239
+		},
+		"destination": "17985 Pacific Coast Hwy, Pacific Palisades, CA 90272",
+		"status": "yellow",
+		"startTime": 1234567,
+		"endTime": 0
+	}, {
+		"uid": 3,
+		"name": "Mike",
+		"icon": "images/mike.png",
+		"position": {
+			"lat": 34.1233,
+			"lng": -118.25436
+		},
+		"destination": "17985 Pacific Coast Hwy, Pacific Palisades, CA 90272",
+		"status": "green",
+		"startTime": 1234567,
+		"endTime": 0
+	}]
+}

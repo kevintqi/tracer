@@ -1,23 +1,32 @@
 <!DOCTYPE html>
 <html>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="css/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+<style>
+body,h1 {font-family: "Raleway", sans-serif}
+body, html {height: 100%}
+.bgimg {
+    background-image: url('/images/manhattan_beach_pier.jpg');
+    min-height: 100%;
+    background-position: center;
+    background-size: cover;
+}
+</style>
+<title>Sebeca.com - Care For Small</title>
+<body>
 
-<head>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="css/w3.css" rel="stylesheet" />
-	<link href="css/task.css" rel="stylesheet" type="text/css" />
-	<link href="css/jquery.dynatable.css" rel="stylesheet" type="text/css" />
-    <link rel="stylesheet" href="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css">
-    <!-- script src="https://code.jquery.com/jquery-1.11.3.min.js"></script -->
-    <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-	<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
-	<script src="lib/jquery.dynatable.js"></script>
-	<script src="lib/task_list.js"></script>
-	<title>Tracker</title>
-</head>
+<div class="bgimg w3-display-container w3-animate-opacity w3-text-white">
+  <div class="w3-display-topleft w3-padding-large w3-xlarge">
+    Sebeca.com - Care For Small
+  </div>
+  <div class="w3-display-middle">
+    <h1 class="w3-jumbo w3-animate-top">COMING SOON</h1>
+    <hr class="w3-border-grey" style="margin:auto;width:40%">
+    <p class="w3-large w3-center">10 days left</p>
+  </div>
+</div>
 
-<body ng-app="taskApp">
-	<div ng-view></div>
 </body>
-
 </html>
