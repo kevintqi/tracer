@@ -1,0 +1,89 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "sdk-model@^0.3.2",
+        "scope": null,
+        "escapedName": "sdk-model",
+        "name": "sdk-model",
+        "rawSpec": "^0.3.2",
+        "spec": ">=0.3.2 <0.4.0",
+        "type": "range"
+      },
+      "/data/workspace/feed-aeg-apg-publisher"
+    ]
+  ],
+  "_from": "sdk-model@>=0.3.2 <0.4.0",
+  "_id": "sdk-model@0.3.4",
+  "_inCache": true,
+  "_location": "/sdk-model",
+  "_nodeVersion": "4.2.6",
+  "_npmUser": {},
+  "_npmVersion": "3.5.2",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "sdk-model@^0.3.2",
+    "scope": null,
+    "escapedName": "sdk-model",
+    "name": "sdk-model",
+    "rawSpec": "^0.3.2",
+    "spec": ">=0.3.2 <0.4.0",
+    "type": "range"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "http://npm-registry.aeg.cloud/sdk-model/-/sdk-model-0.3.4.tgz",
+  "_shasum": "41f9965b6faacb9e9f0f205c82c79d34934e6ffc",
+  "_shrinkwrap": null,
+  "_spec": "sdk-model@^0.3.2",
+  "_where": "/data/workspace/feed-aeg-apg-publisher",
+  "author": "",
+  "dependencies": {
+    "lodash": "^4.14.0",
+    "node-uuid": "^1.4.7",
+    "sdk-error": "^0.2.0",
+    "sdk-validator": "^0.2.0"
+  },
+  "description": "## Installation",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "grunt": "^1.0.1",
+    "grunt-bump": "^0.8.0",
+    "grunt-changelog": "^0.3.2",
+    "grunt-contrib-clean": "^1.0.0",
+    "grunt-contrib-jshint": "^1.0.0",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-exec": "^1.0.0",
+    "grunt-jsdoc": "^2.1.0",
+    "grunt-mocha-istanbul": "^4.0.2",
+    "grunt-mocha-test": "^0.12.7",
+    "grunt-plato": "^1.2.1",
+    "istanbul": "^0.4.4",
+    "jshint-stylish": "^2.2.0",
+    "mocha": "^2.5.3",
+    "should": "^9.0.2",
+    "supertest": "^1.2.0"
+  },
+  "dist": {
+    "shasum": "41f9965b6faacb9e9f0f205c82c79d34934e6ffc",
+    "tarball": "http://npm-registry.aeg.cloud/sdk-model/-/sdk-model-0.3.4.tgz"
+  },
+  "engines": {
+    "node": ">6.0"
+  },
+  "gitHead": "ba3ad351d61ae6ed08f1b68a7f8bca344f46769a",
+  "license": "ISC",
+  "main": "index.js",
+  "name": "sdk-model",
+  "optionalDependencies": {},
+  "publishConfig": {
+    "registry": "http://npm-registry.aeg.cloud"
+  },
+  "readme": "ERROR: No README data found!",
+  "readmeFilename": "README.md",
+  "scripts": {
+    "test": "mocha test"
+  },
+  "version": "0.3.4"
+}

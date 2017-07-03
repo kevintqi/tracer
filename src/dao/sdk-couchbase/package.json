@@ -1,0 +1,86 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "sdk-couchbase@^0.4.0",
+        "scope": null,
+        "escapedName": "sdk-couchbase",
+        "name": "sdk-couchbase",
+        "rawSpec": "^0.4.0",
+        "spec": ">=0.4.0 <0.5.0",
+        "type": "range"
+      },
+      "/data/workspace/feed-aeg-apg-publisher"
+    ]
+  ],
+  "_from": "sdk-couchbase@>=0.4.0 <0.5.0",
+  "_id": "sdk-couchbase@0.4.0",
+  "_inCache": true,
+  "_location": "/sdk-couchbase",
+  "_nodeVersion": "6.3.1",
+  "_npmUser": {},
+  "_npmVersion": "3.10.3",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "sdk-couchbase@^0.4.0",
+    "scope": null,
+    "escapedName": "sdk-couchbase",
+    "name": "sdk-couchbase",
+    "rawSpec": "^0.4.0",
+    "spec": ">=0.4.0 <0.5.0",
+    "type": "range"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "http://npm-registry.aeg.cloud/sdk-couchbase/-/sdk-couchbase-0.4.0.tgz",
+  "_shasum": "23c5b736b22434610698799bf684417d5b83919f",
+  "_shrinkwrap": null,
+  "_spec": "sdk-couchbase@^0.4.0",
+  "_where": "/data/workspace/feed-aeg-apg-publisher",
+  "author": "",
+  "dependencies": {
+    "couchbase": "^2.2.2"
+  },
+  "description": "## Installation",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "docdash": "^0.4.0",
+    "grunt": "^1.0.1",
+    "grunt-bump": "^0.8.0",
+    "grunt-changelog": "^0.3.2",
+    "grunt-contrib-clean": "^1.0.0",
+    "grunt-contrib-jshint": "^1.0.0",
+    "grunt-contrib-watch": "^1.0.0",
+    "grunt-eslint": "^19.0.0",
+    "grunt-exec": "^1.0.0",
+    "grunt-jsdoc": "^2.1.0",
+    "grunt-mocha-istanbul": "^4.0.2",
+    "grunt-mocha-test": "^0.12.7",
+    "grunt-plato": "^1.2.1",
+    "istanbul": "^0.4.4",
+    "jshint-stylish": "^2.2.0",
+    "mocha": "^2.5.3",
+    "sdk-model": "^0.3.1",
+    "should": "^10.0.0",
+    "supertest": "^1.2.0"
+  },
+  "dist": {
+    "shasum": "23c5b736b22434610698799bf684417d5b83919f",
+    "tarball": "http://npm-registry.aeg.cloud/sdk-couchbase/-/sdk-couchbase-0.4.0.tgz"
+  },
+  "gitHead": "f1b9ad93d2c52075f1bc8642233490f310871f1a",
+  "license": "ISC",
+  "main": "index.js",
+  "name": "sdk-couchbase",
+  "optionalDependencies": {},
+  "publishConfig": {
+    "registry": "http://npm-registry.aeg.cloud/"
+  },
+  "readme": "ERROR: No README data found!",
+  "readmeFilename": "README.md",
+  "scripts": {
+    "test": "mocha test/"
+  },
+  "version": "0.4.0"
+}

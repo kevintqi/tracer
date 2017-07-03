@@ -1,0 +1,14 @@
+{
+    "options": {
+
+    },
+    "attributes": {
+
+        "id": {
+            "type": "string"
+        },
+        "data": {
+            "type": "string"
+        }
+    }
+}
