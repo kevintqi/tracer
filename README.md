@@ -1,5 +1,34 @@
 # tracker by Sebeca.com
 
+
+## Database configuration
+### Local Couchbase installation
+1. install CouchBase
+   https://developer.couchbase.com/documentation/server/current/install/getting-started-docker.html
+2. Add a bucket named "users"
+3. Add the following document
+[
+  {
+    "users": {
+      "_meta": {
+        "created": "2017-07-03T01:13:41.842Z",
+        "docType": "model"
+      },
+      "item": {
+        "data": {
+          "data": "[{\"Raul Ramirez\", \"Juan Meyers\", \"Ruben Lechner\"}]",
+          "userId": "1357"
+        },
+        "id": "1357"
+      }
+    }
+  }
+]
+4. Now use: http://localhost:3000/users
+5. Exaple output
+   [{"data":"[{\"Raul Ramirez\", \"Juan Meyers\", \"Ruben Lechner\"}]","userId":"1357"}]
+
+
 ### Todo 
 | Item | Member | Status | Comments |
 | ---- | ------ | ------ | -------- |
