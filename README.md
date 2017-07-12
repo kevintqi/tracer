@@ -27,6 +27,14 @@
 4. Now use: http://localhost:3000/users
 5. Exaple output
    [{"data":"[{\"Raul Ramirez\", \"Juan Meyers\", \"Ruben Lechner\"}]","userId":"1357"}]
+---------------------------------------------------
+
+Authentication:
+source=https://scotch.io/tutorials/easy-node-authentication-setup-and-local
+
+Installation of mongodb
+https://scotch.io/tutorials/an-introduction-to-mongodb
+
 
 
 ### Todo 

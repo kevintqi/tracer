@@ -1,0 +1,5 @@
+1. Server localization
+2. docker container for kevin
+3. Data model
+4. API 
+5. docker integration with login/database  
