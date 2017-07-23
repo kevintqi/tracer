@@ -1,0 +1,15 @@
+{
+
+    "L10N_GREATING $[1]": {
+        "en-us": "Hi $[1]",
+        "es": "Hola $[1]"
+    },
+    "L10N_NOTI": {
+        "en-us": "Notification",
+        "es": "Alertas"
+    },
+    "L10N_LOGOUT": {
+        "en-us": "Logout",
+        "es": "Desconectar"
+    }
+}
