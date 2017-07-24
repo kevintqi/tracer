@@ -2,4 +2,13 @@
 2. docker container for kevin
 3. Data model
 4. API 
-5. docker integration with login/database  
+5. docker integration with login/database 
+
+
+show dbs // show all databases
+use sbc_password // select database
+show collections // list all tables
+db.users.find() // contents of table
+db.users.remove({}) // remove all records from table
+
+1. database docker

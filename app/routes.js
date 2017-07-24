@@ -1,12 +1,15 @@
-var express = require('express');
-const users = require("./controller/users");
-const L10n = require('./localize/l10n');
+var express    = require('express');
+const users    = require("./controller/users");
+const L10n     = require('./localize/l10n');
+const profile  = require('./controller/profile'); 
 
 
 // app/routes.js
 module.exports = function (app, passport) {
 
     app.get('/users', users.getUsers);
+
+    app.post('/lang', profile.setLang);
 
     // =====================================
     // HOME PAGE (with login links) ========
@@ -92,8 +95,7 @@ module.exports = function (app, passport) {
     });
 
     app.get('/out_for_service', isLoggedIn, function (req, res) {
-        //const l10n = new L10n("en-us");
-        const l10n = new L10n("es");
+        const l10n = new L10n(req.user.local.lang);
         res.render('out_for_service.ejs', {
             user: req.user,
             translate: l10n.action.translate 
