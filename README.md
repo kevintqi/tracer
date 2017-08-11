@@ -35,7 +35,17 @@ source=https://scotch.io/tutorials/easy-node-authentication-setup-and-local
 Installation of mongodb
 https://scotch.io/tutorials/an-introduction-to-mongodb
 
-
+### Tasks for Enabling Workflow Demo
+| Item | Member | Status | Comments |
+| ---- | ------ | ------ | -------- |
+| Define data schema | Kevin | | |
+| Spec REST APIs |Kevin + Ruben | | |
+| Support database operation for data schema | Ruben | |  |
+| Support REST APIs | Ruben | |  |
+| Use REST APIs on dashboard app | Kevin | | |
+| Create a test Android app | Kevin | | |
+| Integration and deployment | Ruben + Kevin | | |
+| Prepare demo presentation | Ruben + Kevin | | |
 
 ### Todo 
 | Item | Member | Status | Comments |
