@@ -8,7 +8,7 @@ const Schema = mongoose.Schema;
 // currentLocation : (optional) the current location of the Employee as reported by the app
 const employeeSchema = new Schema ({
     companyId : { type: Schema.Types.ObjectId, ref: 'Company' },
-    nickName : {type: String, required: true, unique:true},
+    nickName : { type: String, required: true, unique:true },
     icon : String,
     roles : String,
     currentLocation: {

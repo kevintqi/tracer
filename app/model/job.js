@@ -12,9 +12,10 @@ const Schema = mongoose.Schema;
 // targetSchedule.endDate :date completed or to complete the Job
 // targetSchedule.time : target start and end time
 // actualSchedule : recorded actual time on the Job
-// mileage: the milage accumulated for the Job, 
+// mileage : the milage accumulated for the Job, 
 //          such as trip to get there, to get required tools and materials
 //          if it's the last job of the assignee, trip to get back to the company
+// achived : the date where Job was achive. Active Jobs should not have the field
 const jobSchema = new Schema ({
     companyId : { type: Schema.Types.ObjectId, ref: 'Company' },
     contact : {
@@ -32,8 +33,8 @@ const jobSchema = new Schema ({
         }
     },
     assignee : {type: Schema.Types.ObjectId, ref: 'Employee'},
-    status : String,
-    statusIcon : String,
+    status : {type: String, default: "New"},
+    statusIcon : {type: String, default: "images/progress_0.png"},
     targetSchedule : {
         scheduleType : String,
         startDate: Date,
@@ -51,7 +52,8 @@ const jobSchema = new Schema ({
             end : Date
         }
     },
-    mileage: Number
+    mileage : Number,
+    achived : Date
 });
 
 module.exports = mongoose.model('Job', jobSchema);

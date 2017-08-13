@@ -8,15 +8,20 @@ const Schema = mongoose.Schema;
 // preferedLanguage : the preferred language for Apps, using standard strings like "en-us"
 // updated : date when the instance was last updated
 const companySchema = new Schema ({
-    customerId : { type: Schema.Types.ObjectId, ref: 'Customer' },
-    name : {type: String, required: true},
-    logo : String,
+    customerId: { type: Schema.Types.ObjectId, ref: 'User' },
+    name: {type: String, required: true},
+    logo: String,
     location: {
         lat: Number,
 		lng: Number,
         address : String,
     },
-    preferreLanguage : String,
+    manager : {type : Schema.Types.ObjectId, ref: 'Employee'},
+    appSettings: {
+        preferreLanguage : {type: String, default: "en"},
+        mapZoon : {type: Number, default: 13},
+        mapMinZoom: {type: Number, default:13}
+    },
     updated: { type: Date, default: Date.now }
 });
 
