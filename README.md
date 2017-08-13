@@ -37,15 +37,14 @@ https://scotch.io/tutorials/an-introduction-to-mongodb
 
 ## REST APIs
 ### Company 
-* GET
-  * Request
+#### GET
+* Request
 ```
 GET /company?customer_id=12345
 ```
-  * Response Data
+* Response Data
 ```
-{
-"company": {
+{"company": {
     "companyId" : 1234
 		"name": "Cloud 8",
 		"logo": "images/logo.png",
@@ -62,28 +61,28 @@ GET /company?customer_id=12345
 	}
 }
 ```
-* POST (TBD)
-* PUT (TBD)
-* PATCH (Language)
-  * Request
+#### POST (TBD)
+#### PUT (TBD)
+#### PATCH (Language)
+* Request
 ```
 PATCH /company/1234/app_settings/preferred_language 
 
 Content Data JSON
 {preferredLanguage: 'es'}
 ```
-  * Response Data
+* Response Data
 ```
 {"messagesLocation" : "es/messages.json"}
 ```
 
 ### Job
-* GET (Active Jobs for Today)
-  * Request
+#### GET (Active Jobs for Today)
+* Request
 ```
 GET /job?company_id=1234
 ```
-  * Response Data
+* Response Data
 ```
 {
 	"jobs": [{
@@ -116,11 +115,10 @@ GET /job?company_id=1234
 	}]
 }
 ```
-* POST (New Job)
-  * Request
+#### POST (New Job)
+* Request
 ```
 POST /job?company_id=1234
-
 Content Data JSON
 {
   "contact": {}
@@ -128,24 +126,18 @@ Content Data JSON
   "targetSchedule" : {}
 }
 ```
-  * Response Data
+* Response Data
 ```
-{ 
-   "jobId": 345  
-}
+{ "jobId": 345 }
 ```
-
-* PATCH (Assignment)
-  * Request
+#### PATCH (Assignment)
+* Request
 ```
 PATCH /job/345/assignee?company_id=1234
-
 Content Data JSON
-{
-  employeeId: 987
-}
+{ "employeeId": 987 }
 ```
-  * Response
+* Response
 ```
 {job}
 ```
@@ -154,9 +146,8 @@ Content Data JSON
   * Request
 ```
 PATCH /job/345/status?company_id=1234
-
 Content Data JSON
-{
+{ 
   "status": "Done",
   "statusIcon": "images/check.png"
   "actualSchedule" : {}
