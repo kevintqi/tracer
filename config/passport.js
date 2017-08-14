@@ -64,7 +64,12 @@ module.exports = function(passport) {
                 // set the user's local credentials
                 newUser.local.email    = email;
                 newUser.local.password = newUser.generateHash(password);
+                // TODO: lechDev for now lets hardcode default vaules,
+                // but need to change later.
                 newUser.local.lang     = 'en-us';
+                newUser.local.role     = 'manager';
+                //newUser.local.group    = 'default';
+                newUser.local.group    = 'acc_1_out_for_service';
 
                 // save the user
                 newUser.save(function(err) {

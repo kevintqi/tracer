@@ -1,0 +1,6 @@
+https://www.npmjs.com/package/connect-roles
+https://stackoverflow.com/questions/15719116/verify-access-group-in-passport-js
+nodejs  passport  multiple accounts roles
+
+// good example-> un approvoed answer in this link.
+https://stackoverflow.com/questions/35581869/setting-admin-role-using-connect-roles-passport-js

@@ -1,14 +1,74 @@
-var express    = require('express');
-const users    = require("./controller/users");
-const L10n     = require('./localize/l10n');
-const profile  = require('./controller/profile'); 
+var express = require('express');
+
+const access = require('../config/access');
+const L10n = require('./localize/l10n');
+const profile = require('./controller/profile');
+const ConnectRoles = require('connect-roles');
+
 
 
 // app/routes.js
 module.exports = function (app, passport) {
 
-    app.get('/users', users.getUsers);
+    //===============CONNECTION RULES=================
+    var user = new ConnectRoles({
+        failureHandler: function (req, res, action) {
+            // optional function to customise code that runs when
+            // user fails authorisation
+            var accept = req.headers.accept || '';
+            res.status(403);
+            if (~accept.indexOf('html')) {
+                // TODO: lechDev need to implement this page
+                res.render('access-denied.ejs', {
+                    action: action
+                });
+            } else {
+                res.send('Access Denied - You don\'t have permission to: ' + action);
+            }
+        }
+    });
+    app.use(user.middleware());
 
+    //users logged can access to public pages
+    user.use(function (req, action) {
+        if (req.isAuthenticated() && action != access.actionAdminPage && action != access.actionAppPage 
+            && action != access.actionClientPage)
+            return true;
+    });
+
+    //moderator users can access private page, but
+    //they might not be the only ones so we don't return
+    //false if the user isn't a moderator
+    user.use(access.actionAppPage, function (req) {
+        console.log(access.actionAppPage);
+        if (req.user.local.role === access.table.manager.role) {
+            return true;
+        }
+    });
+
+    user.use(access.actionClientPage, function (req) {
+        console.log(access.actionClientPage);
+        if (req.user.local.role === access.table.employee.role) {
+            return true;
+        }
+    });
+
+    user.use(access.actionAdminPage, function (req) {
+        console.log(access.actionAdminPage);
+        if (req.user.local.role === access.table.admin.role) {
+            return true;
+        }
+    });
+
+    //  admin can access all pages
+    user.use(function (req) {
+        if (req.user.local.role === access.table.admin.role) {
+            return true;
+        }
+    });
+
+
+    //=============== Set language =================
     app.post('/lang', profile.setLang);
 
     // =====================================
@@ -42,9 +102,6 @@ module.exports = function (app, passport) {
             message: req.flash('loginMessage')
         });
     });
-
-    // process the login form
-    // app.post('/login', do all our passport stuff here);
 
     // process the login form
     app.post('/login', passport.authenticate('local-login', {
@@ -94,11 +151,11 @@ module.exports = function (app, passport) {
         res.redirect('/');
     });
 
-    app.get('/out_for_service', isLoggedIn, function (req, res) {
+    app.get('/out_for_service', isLoggedIn, user.can(access.actionAppPage), function (req, res) {
         const l10n = new L10n(req.user.local.lang);
-        res.render('out_for_service.ejs', {
+        res.render(req.user.local.group, {
             user: req.user,
-            translate: l10n.action.translate 
+            translate: l10n.action.translate
         });
     });
 };
