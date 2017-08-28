@@ -31,8 +31,8 @@ module.exports = function (app, passport) {
 
     //users logged can access to public pages
     user.use(function (req, action) {
-        if (req.isAuthenticated() && action != access.actionAdminPage && action != access.actionAppPage 
-            && action != access.actionClientPage)
+        if (req.isAuthenticated() && action != access.actionAdminPage && action != access.actionAppPage &&
+            action != access.actionClientPage)
             return true;
     });
 
@@ -158,6 +158,194 @@ module.exports = function (app, passport) {
             translate: l10n.action.translate
         });
     });
+
+    // =========================================
+    // APIs 
+    // =========================================
+
+    const companyDispatcher = require('./controller/company_dispatcher');
+    const jobDispatcher = require('./controller/job_dispatcher');
+
+    /**
+     * @swagger
+     * /companies:
+     *   get:
+     *     description: Retrieves all the companies 
+     *     produces:
+     *       - application/json
+     *     responses:
+     *       200:
+     *         description: Succesful request 
+     *       400:
+     *         description: Bad request 
+     *       404:
+     *         description: Request not found 
+     *       500:
+     *         description: Generic error
+     */
+    app.get('/companies', companyDispatcher.getCompanies);
+
+    /**
+     * @swagger
+     * /company?customer_id=123:
+     *   get:
+     *     description: Retrieves a company based on a customer id. 
+      *    query variable: customer_id
+     *     produces:
+     *       - application/json
+     *     responses:
+     *       200:
+     *         description: Succesful request 
+     *       400:
+     *         description: Bad request 
+     *       404:
+     *         description: Request not found 
+     *       500:
+     *         description: Generic error
+     */
+    app.get('/company', companyDispatcher.getCompanyByCustomerId);
+
+    /**
+     * @swagger
+     * /company/<company_id>:
+     *   get:
+     *     description: Retrieves a company based on a company id. 
+     *     param variable: company_id
+     *     produces:
+     *       - application/json
+     *     responses:
+     *       200:
+     *         description: Succesful request 
+     *       400:
+     *         description: Bad request 
+     *       404:
+     *         description: Request not found 
+     *       500:
+     *         description: Generic error
+     */
+    app.get('/company/:company_id', companyDispatcher.getCompanyById);
+
+    /**
+     * @swagger
+     * /company:
+     *   post:
+     *     description: Creates a company 
+     *     produces:
+     *       - application/json
+     *     responses:
+     *       200:
+     *         description: Succesful request 
+     *       400:
+     *         description: Bad request 
+     *       404:
+     *         description: Request not found 
+     *       500:
+     *         description: Generic error
+     */
+    app.post('/company', companyDispatcher.createCompany);
+
+    /**
+     * @swagger
+     * /company?company_id=123:
+     *   put:
+     *     description: Updates a company based on id. 
+      *    query variable: company_id
+     *     produces:
+     *       - application/json
+     *     responses:
+     *       200:
+     *         description: Succesful request 
+     *       400:
+     *         description: Bad request 
+     *       404:
+     *         description: Request not found 
+     *       500:
+     *         description: Generic error
+     */
+    app.put('/company', companyDispatcher.updateCompany);
+
+    /**
+     * @swagger
+     * /company/<company_id>/app_settings/preferred_language:
+     *   get:
+     *     description: Updates the preferred_language of a company. 
+     *     param variable: company_id
+     *     produces:
+     *       - application/json
+     *     responses:
+     *       200:
+     *         description: Succesful request 
+     *       400:
+     *         description: Bad request 
+     *       404:
+     *         description: Request not found 
+     *       500:
+     *         description: Generic error
+     */
+    app.patch('/company/:company_id/app_settings/preferred_language', companyDispatcher.updateLanguage);
+
+    /**
+     * @swagger
+     * /job?company_id=123:
+     *   get:
+     *     description: Retrieves a job based on a company id. 
+      *    query variable: company_id
+     *     produces:
+     *       - application/json
+     *     responses:
+     *       200:
+     *         description: Succesful request 
+     *       400:
+     *         description: Bad request 
+     *       404:
+     *         description: Request not found 
+     *       500:
+     *         description: Generic error
+     */
+    app.get('/job', jobDispatcher.getJobByCompanyId);
+
+    /**
+     * @swagger
+     * /job?company_id=123:
+     *   get:
+     *     description: Creates a job based on a company id. 
+      *    query variable: company_id
+     *     produces:
+     *       - application/json
+     *     responses:
+     *       200:
+     *         description: Succesful request 
+     *       400:
+     *         description: Bad request 
+     *       404:
+     *         description: Request not found 
+     *       500:
+     *         description: Generic error
+     */
+    app.post('/job', jobDispatcher.create);
+
+    /**
+     * @swagger
+     * /job/<job_id>/update:
+     *   get:
+     *     description: Updates a job based on id. 
+     *     param variable: job_id
+     *     produces:
+     *       - application/json
+     *     responses:
+     *       200:
+     *         description: Succesful request 
+     *       400:
+     *         description: Bad request 
+     *       404:
+     *         description: Request not found 
+     *       500:
+     *         description: Generic error
+     */
+    app.patch('/job/:job_id/update', jobDispatcher.updateJob);
+
+
+    //https://stackoverflow.com/questions/20089582/how-to-get-url-parameter-in-express-node-js
 };
 
 // route middleware to make sure a user is logged in

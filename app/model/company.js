@@ -18,8 +18,8 @@ const companySchema = new Schema ({
     },
     manager : {type : Schema.Types.ObjectId, ref: 'Employee'},
     appSettings: {
-        preferreLanguage : {type: String, default: "en"},
-        mapZoon : {type: Number, default: 13},
+        preferredLanguage : {type: String, default: "en"},
+        mapZoom : {type: Number, default: 13},
         mapMinZoom: {type: Number, default:13}
     },
     updated: { type: Date, default: Date.now }

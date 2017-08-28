@@ -1,162 +1,307 @@
 # tracker by Sebeca.com
 
 
-## Database configuration
-### Local Couchbase installation
-1. install CouchBase
-   https://developer.couchbase.com/documentation/server/current/install/getting-started-docker.html
-2. Add a bucket named "users"
-3. Add the following document
-[
-  {
-    "users": {
-      "_meta": {
-        "created": "2017-07-03T01:13:41.842Z",
-        "docType": "model"
-      },
-      "item": {
-        "data": {
-          "data": "[{\"Raul Ramirez\", \"Juan Meyers\", \"Ruben Lechner\"}]",
-          "userId": "1357"
-        },
-        "id": "1357"
-      }
-    }
-  }
-]
-4. Now use: http://localhost:3000/users
-5. Exaple output
-   [{"data":"[{\"Raul Ramirez\", \"Juan Meyers\", \"Ruben Lechner\"}]","userId":"1357"}]
----------------------------------------------------
-
 Authentication:
 source=https://scotch.io/tutorials/easy-node-authentication-setup-and-local
 
 Installation of mongodb
 https://scotch.io/tutorials/an-introduction-to-mongodb
 
-## REST APIs
-### Company 
-#### GET
-* Request
-```
-GET /company?customer_id=12345
-```
-* Response Data
-```
-{"company": {
-    "companyId" : 1234
-		"name": "Cloud 8",
-		"logo": "images/logo.png",
-		"location": {
-			"lat": 34.1022,
-			"lng": -118.2737,
-			"zoom": 13,
-			"minZoom" : 13
-		},
-		"manager": {
-			"name": "Hugo",
-			"icon": "images/manager.jpg"
-		}
-	}
-}
-```
-#### POST (TBD)
-#### PUT (TBD)
-#### PATCH (Language)
-* Request
-```
-PATCH /company/1234/app_settings/preferred_language 
+# APIs
+The APIs for the Tracker Service are currently under construction. The APIs makes it easier to retrieve information about companies and jobs. At this moment, the following APIs are supported.
 
-Content Data JSON
-{preferredLanguage: 'es'}
-```
-* Response Data
-```
-{"messagesLocation" : "es/messages.json"}
-```
+---
+## GET companies 
+Retrieves all the companies <br>
+`/companies`
 
-### Job
-#### GET (Active Jobs for Today)
-* Request
+### Code examples
+```http
+https://localhost:3000/companies
 ```
-GET /job?company_id=1234
-```
-* Response Data
+| Parameter | Required | Options |Description |
+|----------|----------|--------------|-------------|
+| None | n/a | n/a | n/a |
+
+### Response Data
 ```
 {
-	"jobs": [{
-	  "jobId" : 345,
-		"assignee": {
-		  "employeeId" : 9876,
-			"name": "Joe",
-			"icon": "images/joe.png",
-			"position": {
-				"lat": 34.0723,
-				"lng": -118.2436
-			}
-		},
-		"location": {
-			"lat": 34.0723,
-			"lng": -118.2436,
-			"address": "17985 Pacific Coast Hwy, Pacific Palisades, CA 90272"
-		},
-		"status": "Blocked",
-		"statusIcon": "images/block.png",
-		"targetTime": {
-			"label": "Schedule",
-			"start": "7:00a",
-			"end": "9:00a"
-		},
-		"actualTime": {
-			"label": "Actual",
-			"start": "7:00a"
-		}
-	}]
+	"companies": [
+		 { <company JSON> }
+	]
 }
-```
-#### POST (New Job)
-* Request
-```
-POST /job?company_id=1234
-Content Data JSON
-{
-  "contact": {}
-  "location": {"address": {}}
-  "targetSchedule" : {}
-}
-```
-* Response Data
-```
-{ "jobId": 345 }
-```
-#### PATCH (Assignment)
-* Request
-```
-PATCH /job/345/assignee?company_id=1234
-Content Data JSON
-{ "employeeId": 987 }
-```
-* Response
-```
-{job}
 ```
 
-* PATCH (Status)
-  * Request
+### Successful Post-conditions
+* A successful status and the data are returned
+
+
+### Error Post-conditions
+* `400`, bad request
+* `404`, service not available
+* `500`, unexpected runtime error
+---
+
+
+
+## GET company by customer id 
+Retrieves a company based on a customer id. <br>
+`/company?customer_id=<id>`
+
+### Code examples
+```http
+https://localhost:3000/company?customer_id=123
 ```
-PATCH /job/345/status?company_id=1234
-Content Data JSON
-{ 
-  "status": "Done",
-  "statusIcon": "images/check.png"
-  "actualSchedule" : {}
-}
+| Parameter | Required | Options |Description |
+|----------|----------|--------------|-------------|
+| customer_id | yes | n/a | This parameter should be passed as a query variable. |
+
+### Response Data
 ```
-  * Response
+{ <company JSON> }
 ```
-{job}
+
+### Successful Post-conditions
+* A successful status and the data are returned
+
+
+### Error Post-conditions
+* `400`, bad request
+* `404`, service not available
+* `500`, unexpected runtime error
+---
+
+
+
+## GET company by id 
+Retrieves a company based on an (company) id.  <br>
+`/company/<company_id>`
+
+### Code examples
+```http
+https://localhost:3000/company/123
 ```
+| Parameter | Required | Options |Description |
+|----------|----------|--------------|-------------|
+| company_id | yes | n/a | none |
+
+### Response Data
+```
+{ <company JSON> }
+```
+
+### Successful Post-conditions
+* A successful status and the data are returned
+
+### Error Post-conditions
+* `400`, bad request
+* `404`, service not available
+* `500`, unexpected runtime error
+---
+
+
+## POST create a company 
+Creates a company  <br>
+`/company`
+
+### Code examples
+```http
+https://localhost:3000/company
+```
+| Parameter | Required | Options |Description |
+|----------|----------|--------------|-------------|
+| n/a | n/a | n/a | n/a |
+
+### Input Data
+```
+{ <company JSON> }
+```
+
+### Response Data
+```
+{ "companyId": <company_id>}
+```
+
+### Successful Post-conditions
+* A successful status and the data are returned
+
+### Error Post-conditions
+* `400`, bad request
+* `404`, service not available
+* `500`, unexpected runtime error
+---
+
+
+
+
+## PUT update a company based on id 
+Updates a company based on (company) id.<br>
+`/company?company_id=<id>`
+
+### Code examples
+```http
+https://localhost:3000/company?company_id=123
+```
+| Parameter | Required | Options |Description |
+|----------|----------|--------------|-------------|
+| company_id | yes | n/a | This parameter should be passed as a query variable. |
+
+### Input Data
+Any element of the company json object. Note that the structure of the json must be preserved.
+```
+ any element of <company JSON> 
+```
+### Response Data
+```
+{ <company JSON> }
+```
+
+### Successful Post-conditions
+* A successful status and the data are returned
+
+
+### Error Post-conditions
+* `400`, bad request
+* `404`, service not available
+* `500`, unexpected runtime error
+---
+
+
+
+## PATCH update the preferred language 
+Updates the preferred language from the application settings.<br>
+`/company/<company_id>/app_settings/preferred_language`
+
+### Code examples
+```http
+https://localhost:3000/company?company_id=123
+```
+| Parameter | Required | Options |Description |
+|----------|----------|--------------|-------------|
+| company_id | yes | n/a | Company id |
+
+### Input Data
+`<lang>` should be replaced by the language, example "en-us" or "es"
+```
+ { 'preferredLanguage': <lang> } 
+```
+### Response Data
+```
+{ "language": <lang>}
+```
+
+### Successful Post-conditions
+* A successful status and the data are returned
+
+
+### Error Post-conditions
+* `400`, bad request
+* `404`, service not available
+* `500`, unexpected runtime error
+---
+
+
+
+## GET job  by company id 
+Retrieves a job based on a company id. <br>
+`/job?company_id=<id>`
+
+### Code examples
+```http
+https://localhost:3000/job?company_id=123
+```
+| Parameter | Required | Options |Description |
+|----------|----------|--------------|-------------|
+| company_id | yes | n/a | This parameter should be passed as a query variable. |
+
+### Response Data
+```
+{ <job JSON> }
+```
+
+### Successful Post-conditions
+* A successful status and the data are returned
+
+
+### Error Post-conditions
+* `400`, bad request
+* `404`, service not available
+* `500`, unexpected runtime error
+---
+
+
+
+
+## POST create a job with a company id 
+Creates a job with a company id.  <br>
+`/job?company_id=<id>`
+
+### Code examples
+```http
+https://localhost:3000/job?company_id=123
+```
+| Parameter | Required | Options |Description |
+|----------|----------|--------------|-------------|
+| company_id | yes | n/a | This parameter should be passed as a query variable. |
+
+### Input Data
+```
+{ <job JSON> }
+```
+
+### Response Data
+```
+{ "jobId": <job_id>}
+```
+
+### Successful Post-conditions
+* A successful status and the data are returned
+
+### Error Post-conditions
+* `400`, bad request
+* `404`, service not available
+* `500`, unexpected runtime error
+---
+
+
+
+
+## PATCH updates a job based on company id. 
+Updates a job based on a company id.  <br>
+`/job/<job_id>/update`
+
+### Code examples
+```http
+https://localhost:3000/job/123/update
+```
+| Parameter | Required | Options |Description |
+|----------|----------|--------------|-------------|
+| job_id | yes | n/a | Job id used to do the update. |
+
+### Input Data
+Any element of the job json object. Note that the structure of the json must be preserved.
+```
+ any element of <job JSON> 
+```
+
+### Response Data
+```
+{ <job JSON> }
+```
+
+### Successful Post-conditions
+* A successful status and the data are returned
+
+### Error Post-conditions
+* `400`, bad request
+* `404`, service not available
+* `500`, unexpected runtime error
+---
+
+
+# DEV Notes
+1. validate that a update and patch really took placed in copy_.
+
 
 ### Tasks for Enabling Workflow Demo
 | Item | Member | Status | Comments |

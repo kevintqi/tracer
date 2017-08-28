@@ -1,6 +1,7 @@
 // config/database.js
 module.exports = {
-
-    'url' : 'mongodb://sebecaUser:password@localhost:27017/profile'
+    default: 'test',
+    'test' : 'mongodb://sebecaUser:password@localhost:27017/profile',
+    'production' : 'mongodb://sebecaUser:password@localhost:27017/production'
 
 };
