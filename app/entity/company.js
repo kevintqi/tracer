@@ -4,21 +4,22 @@ const log = require('../lib/log');
 
 const company = {
 
-    getByCustomerId: function (option) {
-        const customerId = option;
+    get: function (option) {
+        const companyId = option;
         return new Promise((resolve, reject) => {
             CompanyModel.findOne({
-                    'customerId': customerId
+                    '_id': companyId
                 })
                 .populate('customerId')
                 .exec(function (err, company) {
-                    if (err) return reject(err);
-                    resolve(JSON.stringify(company));
+                    if ((err) || (company === null)) {
+                        reject(err);
+                    }
+                    resolve(company);
                 });
         });
     },
 
-    // refactor-x
     getById: function (option) {
         const id = option;
         return new Promise((resolve, reject) => {
@@ -27,8 +28,10 @@ const company = {
                 })
                 .populate('customerId')
                 .exec(function (err, company) {
-                    if (err) return reject(err);
-                    resolve(JSON.stringify(company));
+                    if ((err) || (company === null)) {
+                        reject(err);
+                    }
+                    resolve(company);
                 });
         });
     },
@@ -37,7 +40,9 @@ const company = {
     getAll: function (option) {
         return new Promise((resolve, reject) => {
             CompanyModel.find({}, function (err, companies) {
-                if (err) return reject(err);
+                if ((err) || (companies.length == 0)) {
+                    return reject(err);
+                }
                 var coMap = {
                     'companies': []
                 };
@@ -45,7 +50,7 @@ const company = {
                     coMap.companies.push(c);
                 });
 
-                resolve(JSON.stringify(coMap));
+                resolve(coMap);
             });
         });
     },
@@ -64,7 +69,10 @@ const company = {
 
             newCompany.save(function (err) {
                 if (err) return reject(err);
-                return resolve('{ "companyId": "' + newCompany._id + '"}');
+                const retCompany = {
+                    'companyId': newCompany._id
+                }
+                return resolve(retCompany);
             });
         });
     },
@@ -84,26 +92,7 @@ const company = {
                 co.save(function (err) {
                     if (err) return reject(err);
                     //return resolve('{ "companyId": "' + co._id + '"}');
-                    return resolve(JSON.stringify(co));
-                });
-            });
-        });
-    },
-
-    patchLanguage: function (option) {
-        const companyId = option.companyId;
-        const coData = option.coData;
-        return new Promise((resolve, reject) => {
-            CompanyModel.findOne({
-                '_id': companyId
-            }, function (err, co) {
-                if ((err) || (co === null)) return reject(err);
-
-                co.appSettings.preferredLanguage = coData.preferredLanguage;
-
-                co.save(function (err) {
-                    if (err) return reject(err);
-                    return resolve('{ "language": "' + co.appSettings.preferredLanguage + '"}');
+                    return resolve(co);
                 });
             });
         });

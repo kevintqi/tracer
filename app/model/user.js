@@ -11,7 +11,8 @@ var userSchema = mongoose.Schema({
         password     : String,
         lang         : String,
         role         : String,
-        group        : String
+        group        : String,
+        companyId    : String
     }
 });
 

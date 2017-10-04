@@ -183,7 +183,7 @@ module.exports = function (app, passport) {
      *       500:
      *         description: Generic error
      */
-    app.get('/companies', companyDispatcher.getCompanies);
+    app.get('/api/companies', companyDispatcher.getCompanies);
 
     /**
      * @swagger
@@ -203,7 +203,7 @@ module.exports = function (app, passport) {
      *       500:
      *         description: Generic error
      */
-    app.get('/company', companyDispatcher.getCompanyByCustomerId);
+    app.get('/api/company', isLoggedIn, companyDispatcher.getCompany);
 
     /**
      * @swagger
@@ -223,7 +223,7 @@ module.exports = function (app, passport) {
      *       500:
      *         description: Generic error
      */
-    app.get('/company/:company_id', companyDispatcher.getCompanyById);
+    app.get('/api/company/:company_id', companyDispatcher.getCompanyById);
 
     /**
      * @swagger
@@ -242,7 +242,7 @@ module.exports = function (app, passport) {
      *       500:
      *         description: Generic error
      */
-    app.post('/company', companyDispatcher.createCompany);
+    app.post('/api/company', companyDispatcher.createCompany);
 
     /**
      * @swagger
@@ -262,27 +262,7 @@ module.exports = function (app, passport) {
      *       500:
      *         description: Generic error
      */
-    app.put('/company', companyDispatcher.updateCompany);
-
-    /**
-     * @swagger
-     * /company/<company_id>/app_settings/preferred_language:
-     *   get:
-     *     description: Updates the preferred_language of a company. 
-     *     param variable: company_id
-     *     produces:
-     *       - application/json
-     *     responses:
-     *       200:
-     *         description: Succesful request 
-     *       400:
-     *         description: Bad request 
-     *       404:
-     *         description: Request not found 
-     *       500:
-     *         description: Generic error
-     */
-    app.patch('/company/:company_id/app_settings/preferred_language', companyDispatcher.updateLanguage);
+    app.put('/api/company', companyDispatcher.updateCompany);
 
     /**
      * @swagger
@@ -302,27 +282,12 @@ module.exports = function (app, passport) {
      *       500:
      *         description: Generic error
      */
-    app.get('/job', jobDispatcher.getJobByCompanyId);
+    app.get('/api/jobs', isLoggedIn,  jobDispatcher.getJobs);
+    //app.get('/api/jobs', jobDispatcher.getJobs);
 
-    /**
-     * @swagger
-     * /job?company_id=123:
-     *   get:
-     *     description: Creates a job based on a company id. 
-      *    query variable: company_id
-     *     produces:
-     *       - application/json
-     *     responses:
-     *       200:
-     *         description: Succesful request 
-     *       400:
-     *         description: Bad request 
-     *       404:
-     *         description: Request not found 
-     *       500:
-     *         description: Generic error
-     */
-    app.post('/job', jobDispatcher.create);
+    app.get('/api/job/:job_id', jobDispatcher.getJob);
+
+    app.post('/api/job', jobDispatcher.create);
 
     /**
      * @swagger
@@ -342,7 +307,7 @@ module.exports = function (app, passport) {
      *       500:
      *         description: Generic error
      */
-    app.patch('/job/:job_id/update', jobDispatcher.updateJob);
+    app.patch('/api/job/:job_id/update', jobDispatcher.updateJob);
 
 
     //https://stackoverflow.com/questions/20089582/how-to-get-url-parameter-in-express-node-js
@@ -354,6 +319,10 @@ function isLoggedIn(req, res, next) {
     // if user is authenticated in the session, carry on 
     if (req.isAuthenticated())
         return next();
+
+    if (req.originalUrl.startsWith('/api/')) {
+        return res.send(401, 'Unauthorized');
+    }
 
     // if they aren't redirect them to the home page
     res.redirect('/login');

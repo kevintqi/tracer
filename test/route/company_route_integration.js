@@ -3,14 +3,16 @@
 const CompanyModel = require('../../app/model/company');
 const company = require('../../app/entity/company');
 
-let chai = require('chai');
-let chaiHttp = require('chai-http');
-let server = require('../../bin/www');
-let should = chai.should();
+const chai = require('chai');
+const chaiHttp = require('chai-http');
+const server = require('../../bin/www');
+const sinon = require('sinon');
+const should = chai.should();
+const User = require('../../app/model/user');
 
 chai.use(chaiHttp);
 
-describe('Integration Test', () => {
+describe('Integration Test for COMPANY Requests: company_route_integration.js', () => {
     beforeEach((done) => {
         // Put code here
         CompanyModel.remove({}, function (err) {
@@ -19,96 +21,74 @@ describe('Integration Test', () => {
             } else {
                 console.log('Cleared company info');
             }
+
+            sinon.stub(server.request, 'isAuthenticated').callsFake(function (req, res, next) {
+                return true;
+            });
+
+            setCompanyId(server, '5986b8180a8ea07f6155858d');
             done();
         });
     });
 
-
-    describe('/GET/companies', () => {
-        it('it should GET all the companies', (done) => {
-            company.create(getCompany()).then(data => {
-                console.log('created company');
-            }).catch(err => {
-                console.log(err)
-            });
-
-            chai.request(server)
-                .get('/companies')
-                //.send(book)
-                .end((err, res) => {
-                    let result = JSON.parse(res.body);
-                    res.should.have.status(200);
-                    result.should.be.a('object');
-                    result.should.have.property('companies');
-                    result.companies.should.have.length.above(0);
-                    result.companies[0].should.have.property("name").eql("Cloud 9");
-
-                    console.log(res.body);
-                    done();
-                });
-        });
+    afterEach(function () {
+        server.request.isAuthenticated.restore();
     });
-});
 
-describe('/GET/company?customer_id=123', () => {
-    it('it should GET compnay by customer id', (done) => {
-        company.create(getCompany()).then(data => {
-            console.log('created company');
 
-        }).catch(err => {
+    it('it should GET all the companies (/api/companies)', (done) => {
+        company.create(getCompany()).then(data => {}).catch(err => {
             console.log(err)
         });
 
         chai.request(server)
-            .get('/company?customer_id=5986b8180a8ea07f6155858d')
+            .get('/api/companies')
             //.send(book)
             .end((err, res) => {
+                let result = res.body;
                 res.should.have.status(200);
-                let result = JSON.parse(res.body);
                 result.should.be.a('object');
-                result.should.have.property('customerId');
-                result.should.have.property('name').eql('Cloud 9');
-                // TODO: lechDev add the rest of properties
+                result.should.have.property('companies');
+                result.companies.should.have.length.above(0);
+                result.companies[0].should.have.property("name").eql("Cloud 9");
+
+                console.log(res.body);
                 done();
             });
     });
-});
 
-describe('/GET/company/123', () => {
-    it('it should GET compnay by company id', (done) => {
+
+    it('it should GET compnay (/api/company)', (done) => {
         var companyId;
         company.create(getCompany()).then(data => {
-            const companyObj = JSON.parse(data);
-            companyId = companyObj.companyId;
+            companyId = data.companyId;
+            setCompanyId(server, companyId);
 
             chai.request(server)
-                .get('/company/' + companyId)
-                //.send(book)
+                .get('/api/company')
                 .end((err, res) => {
                     res.should.have.status(200);
-                    let result = JSON.parse(res.body);
+                    let result = res.body;
                     result.should.be.a('object');
-                    result.should.have.property('customerId');
+                    result.should.have.property('_id').eql(companyId.toString());
                     result.should.have.property('name').eql('Cloud 9');
                     // TODO: lechDev add the rest of properties
                     done();
                 });
-
         }).catch(err => {
             console.log(err)
         });
     });
 
-    it('it should PUT company by customer id', (done) => {
+
+    it('it should PUT company (PUT/api/company', (done) => {
         var companyId;
         company.create(getCompany()).then(data => {
-            const companyObj = JSON.parse(data);
-            companyId = companyObj.companyId;
+            companyId = data.companyId;
+            setCompanyId(server, companyId);
+
             chai.request(server)
-                .put('/company')
-                .query({
-                    company_id: companyId
-                })
+                .put('/api/company')
                 .send({
                     'company': {
                         'name': 'StudioCode'
@@ -116,9 +96,9 @@ describe('/GET/company/123', () => {
                 })
                 .end((err, res) => {
                     res.should.have.status(200);
-                    let result = JSON.parse(res.body);
+                    let result = res.body;
                     result.should.be.a('object');
-                    result.should.have.property('_id').eql(companyId);
+                    result.should.have.property('_id').eql(companyId.toString());
                     result.should.have.property('name').eql('StudioCode');
                     // TODO: lechDev add the rest of properties
                     done();
@@ -128,36 +108,30 @@ describe('/GET/company/123', () => {
         });
 
     });
-});
 
-
-describe('/POST/company', () => {
-    it('it should (POST) create a company', (done) => {
+    it('it should (POST) create a company (POST/api/company)', (done) => {
         chai.request(server)
-            .post('/company')
+            .post('/api/company')
             .send(JSON.parse(getCompany()))
             .end((err, res) => {
                 res.should.have.status(200);
-                let result = JSON.parse(res.body);
+                let result = res.body;
                 result.should.be.a('object');
                 result.should.have.property('companyId');
                 // TODO: lechDev add the rest of properties
                 done();
             });
     });
-});
 
-describe('/PUT/company?company_id=123', () => {
-    it('it should PUT compnay by customer id', (done) => {
+
+    it('it should PUT company name (PUT/api/company)', (done) => {
         var companyId;
         company.create(getCompany()).then(data => {
-            const companyObj = JSON.parse(data);
-            companyId = companyObj.companyId;
+            companyId = data.companyId;
+            setCompanyId(server, companyId);
+
             chai.request(server)
-                .put('/company')
-                .query({
-                    company_id: companyId
-                })
+                .put('/api/company')
                 .send({
                     'company': {
                         'name': 'StudioCode'
@@ -165,21 +139,20 @@ describe('/PUT/company?company_id=123', () => {
                 })
                 .end((err, res) => {
                     res.should.have.status(200);
-                    let result = JSON.parse(res.body);
+                    let result = res.body;
                     result.should.be.a('object');
-                    result.should.have.property('_id').eql(companyId);
+                    result.should.have.property('_id').eql(companyId.toString());
                     result.should.have.property('name').eql('StudioCode');
                     // TODO: lechDev add the rest of properties
 
 
                     chai.request(server)
-                        .get('/company/' + companyId)
-                        //.send(book)
+                        .get('/api/company')
                         .end((err, res) => {
                             res.should.have.status(200);
-                            let result = JSON.parse(res.body);
+                            let result = res.body;
                             result.should.be.a('object');
-                            result.should.have.property('_id').eql(companyId);
+                            result.should.have.property('_id').eql(companyId.toString());
                             result.should.have.property('name').eql('StudioCode');
                             // TODO: lechDev add the rest of properties
                             done();
@@ -190,37 +163,38 @@ describe('/PUT/company?company_id=123', () => {
         });
 
     });
-});
 
-describe('/PATCH/company/123/app_settings/preferred_language', () => {
-    it('it should PATCH the preferred language', (done) => {
+
+    it('it should update (PUT) the preferred language', (done) => {
         var companyId;
         company.create(getCompany()).then(data => {
-            const companyObj = JSON.parse(data);
-            companyId = companyObj.companyId;
+            companyId = data.companyId;
+            setCompanyId(server, companyId);
+
             chai.request(server)
-                .patch('/company/' + companyId + '/app_settings/preferred_language')
-                //.query({
-                //    company_id: companyId
-                //})
+                .put('/api/company')
                 .send({
-                    'preferredLanguage': 'es'
+                    'company': {
+                        'appSettings': {
+                            'preferredLanguage': 'es'
+                        }
+                    }
                 })
                 .end((err, res) => {
                     res.should.have.status(200);
-                    let result = JSON.parse(res.body);
+                    let result = res.body;
                     result.should.be.a('object');
-                    result.should.have.property('language').eql("es");
+                    result.should.have.property('appSettings');
+                    result.appSettings.should.have.property('preferredLanguage').eql("es");
 
 
                     chai.request(server)
-                        .get('/company/' + companyId)
-                        //.send(book)
+                        .get('/api/company')
                         .end((err, res) => {
                             res.should.have.status(200);
-                            let result = JSON.parse(res.body);
+                            let result = res.body;
                             result.should.be.a('object');
-                            result.should.have.property('_id').eql(companyId);
+                            result.should.have.property('_id').eql(companyId.toString());
                             result.appSettings.should.have.property('preferredLanguage').eql('es');
                             // TODO: lechDev add the rest of properties
                             done();
@@ -229,10 +203,17 @@ describe('/PATCH/company/123/app_settings/preferred_language', () => {
         }).catch(err => {
             console.log(err)
         });
-
     });
 });
 
+var setCompanyId = function (server, id) {
+    var user = new User();
+    user.local.lang = 'en-us';
+    user.local.role = 'manager';
+    user.local.group = 'acc_1_out_for_service';
+    user.local.companyId = id;
+    server.request.user = user;
+};
 
 var getCompany = function () {
     return '{' +

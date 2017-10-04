@@ -1,4 +1,0 @@
-{
-  "cluster" : "couchbase://localhost:8091",
-  "bucket" : "users"
-}

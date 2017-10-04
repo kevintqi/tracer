@@ -9,9 +9,9 @@ const taskMapper = {
         'fnc': company.getAll,
         'name': 'getCompanies'
     },
-    'getCompanyByCustomerId': {
-        'fnc': company.getByCustomerId,
-        'name': 'getCompanyByCustomerId'
+    'getCompany': {
+        'fnc': company.get,
+        'name': 'getCompany'
     },
     'getCompanyById': {
         'fnc': company.getById,
@@ -25,20 +25,20 @@ const taskMapper = {
         'fnc': company.update,
         'name': 'updateCompany'
     },
-    'updateLanguage': {
-        'fnc': company.patchLanguage,
-        'name': 'updateLanguage'
-    },
     //////
     // JOB Section
     //////
+    'getJobs': {
+        'fnc': job.getJobs,
+        'name': 'getJobs'
+    },
     'createJob': {
         'fnc': job.create,
         'name': 'createJob'
     },
-    'getJobByCompanyId': {
-        'fnc': job.getByCompanyId,
-        'name': 'getJobByCompanyId'
+    'getJob': {
+        'fnc': job.getJob,
+        'name': 'getJob'
     },
     'updateJob': {
         'fnc': job.update,

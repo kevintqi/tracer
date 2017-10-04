@@ -9,11 +9,10 @@ const dispatcher = {
     getCompanies: function (req, res) {
         runner.go(req, res, taskMapper.getCompanies.name, "none");
     },
-    getCompanyByCustomerId: function (req, res) {
-        runner.go(req, res, taskMapper.getCompanyByCustomerId.name,
-            req.query.customer_id);
+    getCompany: function (req, res) {
+        runner.go(req, res, taskMapper.getCompany.name,
+            req.user.local.companyId);
     },
-    // refactor-x
     getCompanyById: function (req, res) {
         runner.go(req, res, taskMapper.getCompanyById.name,
             req.params.company_id);
@@ -23,18 +22,11 @@ const dispatcher = {
     },
     updateCompany: function (req, res) {
         var options = {
-            'companyId': req.query.company_id,
+            'companyId': req.user.local.companyId,
             'coData': req.body
         }
         runner.go(req, res, taskMapper.updateCompany.name, options);
     },
-    updateLanguage: function (req, res) {
-        var options = {
-            'companyId': req.params.company_id,
-            'coData': req.body
-        }
-        runner.go(req, res, taskMapper.updateLanguage.name, options);
-    }
 };
 
 module.exports = dispatcher;

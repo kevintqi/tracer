@@ -13,11 +13,11 @@ The APIs for the Tracker Service are currently under construction. The APIs make
 ---
 ## GET companies 
 Retrieves all the companies <br>
-`/companies`
+`/api/companies`
 
 ### Code examples
 ```http
-https://localhost:3000/companies
+https://localhost:3000/api/companies
 ```
 | Parameter | Required | Options |Description |
 |----------|----------|--------------|-------------|
@@ -44,21 +44,47 @@ https://localhost:3000/companies
 
 
 
-## GET company by customer id 
-Retrieves a company based on a customer id. <br>
-`/company?customer_id=<id>`
+## GET company
+Retrieves a company <br>
+`/api/company`
 
 ### Code examples
 ```http
-https://localhost:3000/company?customer_id=123
+https://localhost:3000/api/company
 ```
 | Parameter | Required | Options |Description |
 |----------|----------|--------------|-------------|
-| customer_id | yes | n/a | This parameter should be passed as a query variable. |
+| n/a | n/a | n/a | n/a |
 
 ### Response Data
-```
-{ <company JSON> }
+```json
+{
+    "_id": "59a38a3b98101d114fef37b3",
+    "customerId": {
+        "_id": "5986b8180a8ea07f6155858d",
+        "__v": 0,
+        "local": {
+            "group": "acc_1_out_for_service",
+            "role": "manager",
+            "lang": "en-us",
+            "password": "$2a$08$w2VOeogPIFw1/dn.ptVXROcmzNJoklEArWM0DpfNUOSzHlUoYr.gm",
+            "email": "ruben@m.com"
+        }
+    },
+    "name": "Cloud 9",
+    "logo": "images/logo.png",
+    "__v": 0,
+    "updated": "2017-08-28T03:12:59.015Z",
+    "appSettings": {
+        "mapMinZoom": 13,
+        "mapZoom": 11,
+        "preferredLanguage": "en-us"
+    },
+    "location": {
+        "lat": 34.1022,
+        "lng": -118.2737
+    }
+}
 ```
 
 ### Successful Post-conditions
@@ -69,25 +95,54 @@ https://localhost:3000/company?customer_id=123
 * `400`, bad request
 * `404`, service not available
 * `500`, unexpected runtime error
+
+<!-- *************************************************************************************************************-->
+<!-- *************************************************************************************************************-->
+<!-- *************************************************************************************************************-->
+
 ---
-
-
 
 ## GET company by id 
 Retrieves a company based on an (company) id.  <br>
-`/company/<company_id>`
+`/api/company/<company_id>`
 
 ### Code examples
 ```http
-https://localhost:3000/company/123
+https://localhost:3000/api/company/123
 ```
 | Parameter | Required | Options |Description |
 |----------|----------|--------------|-------------|
 | company_id | yes | n/a | none |
 
 ### Response Data
-```
-{ <company JSON> }
+```json
+{
+    "_id": "59a38a3b98101d114fef37b3",
+    "customerId": {
+        "_id": "5986b8180a8ea07f6155858d",
+        "__v": 0,
+        "local": {
+            "group": "acc_1_out_for_service",
+            "role": "manager",
+            "lang": "en-us",
+            "password": "$2a$08$w2VOeogPIFw1/dn.ptVXROcmzNJoklEArWM0DpfNUOSzHlUoYr.gm",
+            "email": "ruben@m.com"
+        }
+    },
+    "name": "Cloud 9",
+    "logo": "images/logo.png",
+    "__v": 0,
+    "updated": "2017-08-28T03:12:59.015Z",
+    "appSettings": {
+        "mapMinZoom": 13,
+        "mapZoom": 11,
+        "preferredLanguage": "en-us"
+    },
+    "location": {
+        "lat": 34.1022,
+        "lng": -118.2737
+    }
+}
 ```
 
 ### Successful Post-conditions
@@ -97,29 +152,50 @@ https://localhost:3000/company/123
 * `400`, bad request
 * `404`, service not available
 * `500`, unexpected runtime error
----
 
+<!-- *************************************************************************************************************-->
+<!-- *************************************************************************************************************-->
+<!-- *************************************************************************************************************-->
+
+---
 
 ## POST create a company 
 Creates a company  <br>
-`/company`
+`/api/company`
 
 ### Code examples
 ```http
-https://localhost:3000/company
+https://localhost:3000/api/company
 ```
 | Parameter | Required | Options |Description |
 |----------|----------|--------------|-------------|
 | n/a | n/a | n/a | n/a |
 
 ### Input Data
-```
-{ <company JSON> }
+```json
+{
+    "company": {
+        "customerId": "5986b8180a8ea07f6155858d",
+        "name": "Cloud 9",
+        "logo": "images/logo.png",
+        "appSettings": {
+            "mapMinZoom": 13,
+            "mapZoom": 11,
+            "preferredLanguage": "en-us"
+        },
+        "location": {
+            "lat": 34.1022,
+            "lng": -118.2737
+        }
+    }
+}
 ```
 
 ### Response Data
-```
-{ "companyId": <company_id>}
+```json
+{
+    "companyId": "59cc4fb360406ef31a0369a5"
+}
 ```
 
 ### Successful Post-conditions
@@ -134,26 +210,50 @@ https://localhost:3000/company
 
 
 
-## PUT update a company based on id 
-Updates a company based on (company) id.<br>
-`/company?company_id=<id>`
+## PUT update a company
+Updates a company <br>
+`/api/company`
 
 ### Code examples
 ```http
-https://localhost:3000/company?company_id=123
+https://localhost:3000/api/company
 ```
 | Parameter | Required | Options |Description |
 |----------|----------|--------------|-------------|
-| company_id | yes | n/a | This parameter should be passed as a query variable. |
+| n/a | n/a | n/a | n/a |
 
 ### Input Data
 Any element of the company json object. Note that the structure of the json must be preserved.
-```
- any element of <company JSON> 
+```json
+ {
+    "company": {
+       "name": "lechDev",
+       "location": {
+           "lat": 777.77,
+           "lng": -118.2737
+       }
+    }
+}
 ```
 ### Response Data
-```
-{ <company JSON> }
+```json
+{
+    "_id": "59a38a3b98101d114fef37b3",
+    "customerId": "5986b8180a8ea07f6155858d",
+    "name": "lechDev",
+    "logo": "images/logo.png",
+    "__v": 0,
+    "updated": "2017-08-28T03:12:59.015Z",
+    "appSettings": {
+        "mapMinZoom": 13,
+        "mapZoom": 11,
+        "preferredLanguage": "en-us"
+    },
+    "location": {
+        "lat": 777.77,
+        "lng": -118.2737
+    }
+}
 ```
 
 ### Successful Post-conditions
@@ -164,59 +264,129 @@ Any element of the company json object. Note that the structure of the json must
 * `400`, bad request
 * `404`, service not available
 * `500`, unexpected runtime error
+
+<!-- *************************************************************************************************************-->
+<!-- *************************************************************************************************************-->
+<!-- *************************************************************************************************************-->
+
 ---
 
-
-
-## PATCH update the preferred language 
-Updates the preferred language from the application settings.<br>
-`/company/<company_id>/app_settings/preferred_language`
+## GET all jobs 
+Retrieves all jobs  
+`/api/jobs`
 
 ### Code examples
 ```http
-https://localhost:3000/company?company_id=123
+https://localhost:3000/jobs
 ```
+
 | Parameter | Required | Options |Description |
 |----------|----------|--------------|-------------|
-| company_id | yes | n/a | Company id |
+| n/a | n/a | n/a | n/a |
 
-### Input Data
-`<lang>` should be replaced by the language, example "en-us" or "es"
-```
- { 'preferredLanguage': <lang> } 
-```
 ### Response Data
-```
-{ "language": <lang>}
+```json
+{
+    "jobs": [
+        {
+            "_id": "59a38a3b98101d114fef37bd",
+            "mileage": 3333,
+            "assignee": "5986b8180a8ea07f6155858d",
+            "companyId": "5986b8180a8ea07f6155858d",
+            "__v": 0,
+            "actualSchedule": {
+                "startDate": "2017-08-26T18:02:15.555Z",
+                "endDate": "2017-08-26T18:02:16.666Z",
+                "time": {
+                    "start": "2017-08-26T18:02:11.111Z",
+                    "end": "2017-08-26T18:02:12.222Z"
+                }
+            },
+            "statusIcon": "images/check.png",
+            "status": "Done",
+            "location": {
+                "lat": 34.0723,
+                "lng": -118.2436,
+                "address": {
+                    "street": "17985 Pacific Coast Hwy",
+                    "city": "Torrance",
+                    "state": "CA",
+                    "zipCode": 90272
+                }
+            },
+            "contact": {
+                "name": "Kevin",
+                "phoneNumber": "310 333 5050"
+            }
+        }
+    ]
+}
 ```
 
 ### Successful Post-conditions
 * A successful status and the data are returned
 
-
 ### Error Post-conditions
 * `400`, bad request
 * `404`, service not available
 * `500`, unexpected runtime error
+
+<!-- *************************************************************************************************************-->
+<!-- *************************************************************************************************************-->
+<!-- *************************************************************************************************************-->
+
 ---
 
-
-
-## GET job  by company id 
-Retrieves a job based on a company id. <br>
-`/job?company_id=<id>`
+## GET job by id 
+Retrieve a job based on an id
+`/api/job/<job_id>`
 
 ### Code examples
 ```http
-https://localhost:3000/job?company_id=123
+https://localhost:3000/api/job/<job_id>
 ```
+
 | Parameter | Required | Options |Description |
 |----------|----------|--------------|-------------|
-| company_id | yes | n/a | This parameter should be passed as a query variable. |
+| job id | yes | n/a | The id is used to retrieve the job |
 
 ### Response Data
-```
-{ <job JSON> }
+```json
+{
+    "job": [
+        {
+            "_id": "59a38a3b98101d114fef37bd",
+            "mileage": 3333,
+            "assignee": "5986b8180a8ea07f6155858d",
+            "companyId": "5986b8180a8ea07f6155858d",
+            "__v": 0,
+            "actualSchedule": {
+                "startDate": "2017-08-26T18:02:15.555Z",
+                "endDate": "2017-08-26T18:02:16.666Z",
+                "time": {
+                    "start": "2017-08-26T18:02:11.111Z",
+                    "end": "2017-08-26T18:02:12.222Z"
+                }
+            },
+            "statusIcon": "images/check.png",
+            "status": "Done",
+            "location": {
+                "lat": 34.0723,
+                "lng": -118.2436,
+                "address": {
+                    "street": "17985 Pacific Coast Hwy",
+                    "city": "Torrance",
+                    "state": "CA",
+                    "zipCode": 90272
+                }
+            },
+            "contact": {
+                "name": "Kevin",
+                "phoneNumber": "310 333 5050"
+            }
+        }
+    ]
+}
 ```
 
 ### Successful Post-conditions
@@ -227,31 +397,62 @@ https://localhost:3000/job?company_id=123
 * `400`, bad request
 * `404`, service not available
 * `500`, unexpected runtime error
+
+<!-- *************************************************************************************************************-->
+<!-- *************************************************************************************************************-->
+<!-- *************************************************************************************************************-->
+
 ---
 
-
-
-
-## POST create a job with a company id 
+## POST create a job
 Creates a job with a company id.  <br>
-`/job?company_id=<id>`
+`/api/job`
 
 ### Code examples
 ```http
-https://localhost:3000/job?company_id=123
+https://localhost:3000/job
 ```
 | Parameter | Required | Options |Description |
 |----------|----------|--------------|-------------|
-| company_id | yes | n/a | This parameter should be passed as a query variable. |
+| n/a | n/a | n/a | n/a |
 
 ### Input Data
-```
-{ <job JSON> }
+```json
+{
+    "mileage": 1111,
+    "assignee": "5986b8180a8ea07f6155858d",
+    "actualSchedule": {
+        "startDate": "2017-08-26T18:02:15.555Z",
+        "endDate": "2017-08-26T18:02:16.666Z",
+        "time": {
+            "start": "2017-08-26T18:02:11.111Z",
+            "end": "2017-08-26T18:02:12.222Z"
+        }
+    },
+    "statusIcon": "images/check.png",
+    "status": "Done",
+    "location": {
+        "lat": 34.0723,
+        "lng": -118.2436,
+        "address": {
+            "street": "17985 Pacific Coast Hwy",
+            "city": "Torrance",
+            "state": "CA",
+            "zipCode": 90272
+        }
+    },
+    "contact": {
+        "name": "Kevin",
+        "phoneNumber": "310 333 5050"
+    }
+}
 ```
 
 ### Response Data
-```
-{ "jobId": <job_id>}
+```json
+{
+    "jobId": "59d1698938759b633d3908d1"
+}
 ```
 
 ### Successful Post-conditions
@@ -280,13 +481,49 @@ https://localhost:3000/job/123/update
 
 ### Input Data
 Any element of the job json object. Note that the structure of the json must be preserved.
-```
- any element of <job JSON> 
+```json
+ {
+    "mileage": 777,
+    "contact": {
+        "name": "Ruben",
+        "phoneNumber": "310 333 5050"
+    }
+} 
 ```
 
 ### Response Data
-```
-{ <job JSON> }
+```json
+{
+    "_id": "59d1698938759b633d3908d1",
+    "assignee": "5986b8180a8ea07f6155858d",
+    "mileage": 777,
+    "companyId": "5986b8180a8ea07f6155858d",
+    "__v": 0,
+    "actualSchedule": {
+        "startDate": "2017-08-26T18:02:15.555Z",
+        "endDate": "2017-08-26T18:02:16.666Z",
+        "time": {
+            "start": "2017-08-26T18:02:11.111Z",
+            "end": "2017-08-26T18:02:12.222Z"
+        }
+    },
+    "statusIcon": "images/check.png",
+    "status": "Done",
+    "location": {
+        "lat": 34.0723,
+        "lng": -118.2436,
+        "address": {
+            "street": "17985 Pacific Coast Hwy",
+            "city": "Torrance",
+            "state": "CA",
+            "zipCode": 90272
+        }
+    },
+    "contact": {
+        "name": "Ruben",
+        "phoneNumber": "310 333 5050"
+    }
+}
 ```
 
 ### Successful Post-conditions

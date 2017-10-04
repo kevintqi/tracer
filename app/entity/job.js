@@ -8,7 +8,6 @@ const Schema = mongoose.Schema;
 
 const job = {
 
-    // refactor-x
     create: function (option) {
         const companyId = option.companyId;
         const jobData = option.jobData
@@ -27,11 +26,12 @@ const job = {
 
             newJob.save(function (err) {
                 if (err) return reject(err);
-                return resolve('{ "jobId": "' + newJob._id + '"}');
+                return resolve({ 'jobId':  newJob._id });
             });
         });
     },
-    getByCompanyId: function (option) {
+
+    getJobs: function (option) {
         const companyId = option;
         validateId_(companyId);
         return new Promise((resolve, reject) => {
@@ -46,13 +46,37 @@ const job = {
                     jobList.jobs.push(c);
                 });
 
-                resolve(JSON.stringify(jobList));
+                resolve(jobList);
             });
         });
     },
+
+    getJob: function (option) {
+        const companyId = option.companyId;
+        const jobId = option.jobId;
+        validateId_(companyId);
+        return new Promise((resolve, reject) => {
+            JobModel.find({
+                '_id': jobId,
+                'companyId': companyId
+            }, function (err, jobs) {
+                if (err) return reject(err);
+                var jobList = {
+                    'job': []
+                };
+                jobs.forEach(function (c) {
+                    jobList.job.push(c);
+                });
+
+                resolve(jobList);
+            });
+        });
+    },
+
     update: function (option) {
         const jobId = option.jobId;
         const jobData = option.jobData;
+        validateId_(jobId);
         return new Promise((resolve, reject) => {
             JobModel.findOne({
                 '_id': jobId
@@ -63,7 +87,7 @@ const job = {
 
                 job.save(function (err) {
                     if (err) return reject(err);
-                    return resolve(JSON.stringify(job));
+                    return resolve(job);
                 });
             });
         });

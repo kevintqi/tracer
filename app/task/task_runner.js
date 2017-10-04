@@ -3,9 +3,14 @@
 const Task = require('../task/task');
 
 exports.go = function (req, res, type, option) {
+   
+    if (!req.isAuthenticated()) {
+        return res.send(401, 'Unauthorized');
+    }
+
     const task = new Task(type, option);
     if (!task.isValid()) {
-        res.writeHead("400", "Bad Request");
+        res.writeHead(400, "Bad Request");
         return res.end();
     }
 
@@ -20,7 +25,7 @@ exports.go = function (req, res, type, option) {
             res.json(status);
         })
         .catch(err => {
-            res.writeHead("500", "Internal Server Error");
+            res.writeHead(500, "Internal Server Error");
             res.end(err.toString());
         });
 }

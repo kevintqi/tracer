@@ -1,12 +1,5 @@
-1. Implement getCompanyById
-2. call getComapanyById in the integration tests for put and patch
-
-show dbs // show all databases
-use sbc_password // select database
-show collections // list all tables
-db.users.find() // contents of table
-db.users.remove({}) // remove all records from table
-
-1. database docker
+1. Test APIs with wrong arguments
+2. Homepage to set the companyID and create profile
+3. Create API to GET and POST location information
 
 sudo docker run -d -p 27017:27017 -v ~/data:/data/db mongo

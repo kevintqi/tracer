@@ -8,71 +8,77 @@ const chaiHttp = require('chai-http');
 const server = require('../../bin/www');
 const sinon = require('sinon');
 const should = chai.should();
+const User = require('../../app/model/user');
 
 chai.use(chaiHttp);
 
-describe('Route Test', () => {
-    /*   beforeEach((done) => {
-           // Put code here
-      });
-    */
-
-
-    describe('/GET/companies', () => {
-        it('it should GET all the companies', (done) => {
-            const taskMapperMock = sinon.mock(taskMapper.getCompanies);
-            taskMapperMock.expects('fnc').once().returns(Promise.resolve(getJson()));
-            chai.request(server)
-                .get('/companies')
-                //.send(book)
-                .end((err, res) => {
-                    res.should.have.status(200);
-                    let result = JSON.parse(res.body);
-                    result.should.be.a('object');
-                    result.should.have.property('companies');
-                    result.companies[0].should.have.property('name').eql(
-                        'lechDev XXXX:)'
-                    );
-                    // TODO: lechDev add the rest of properties
-                    taskMapperMock.verify();
-                    taskMapperMock.restore();
-                    done();
-                });
+describe('Route Test for company: company_route_unit.js', () => {
+    beforeEach(function () {
+        sinon.stub(server.request, 'isAuthenticated').callsFake(function (req, res, next) {
+            return true;
         });
+
+        var user = new User();
+        user.local.lang = 'en-us';
+        user.local.role = 'manager';
+        user.local.group = 'acc_1_out_for_service';
+        user.local.companyId = '5986b8180a8ea07f6155858d';
+        server.request.user = user;
     });
 
-    describe('/GET/company?customer_id=123', () => {
-        it('it should GET company by customer id', (done) => {
-            const taskMapperMock = sinon.mock(taskMapper.getCompanyByCustomerId);
-            taskMapperMock.expects('fnc').once().returns(Promise.resolve(getJson()));
-
-            chai.request(server)
-                .get('/company?customer_id=5986b8180a8ea07f6155858d')
-                //.send(book)
-                .end((err, res) => {
-                    res.should.have.status(200);
-                    let result = JSON.parse(res.body);
-                    result.should.be.a('object');
-                    result.should.have.property('companies');
-                    result.companies[0].should.have.property('name').eql(
-                        'lechDev XXXX:)'
-                    );
-                    // TODO: lechDev add the rest of properties
-                    taskMapperMock.verify();
-                    taskMapperMock.restore();
-                    done();
-                });
-        });
+    afterEach(function () {
+        server.request.isAuthenticated.restore();
     });
-});
 
-describe('/GET/company/123', () => {
-    it('it should GET compnay by company id', (done) => {
+    it('it should GET all the companies (/api/companies)', (done) => {
+        const taskMapperMock = sinon.mock(taskMapper.getCompanies);
+        taskMapperMock.expects('fnc').once().returns(Promise.resolve(getJson()));
+        chai.request(server)
+            .get('/api/companies')
+            //.send(book)
+            .end((err, res) => {
+                res.should.have.status(200);
+                let result = JSON.parse(res.body);
+                result.should.be.a('object');
+                result.should.have.property('companies');
+                result.companies[0].should.have.property('name').eql(
+                    'lechDev XXXX:)'
+                );
+                // TODO: lechDev add the rest of properties
+                taskMapperMock.verify();
+                taskMapperMock.restore();
+                done();
+            });
+    });
+
+    it('it should GET company (/api/company)', (done) => {
+        const taskMapperMock = sinon.mock(taskMapper.getCompany);
+        taskMapperMock.expects('fnc').once().returns(Promise.resolve(getJson()));
+
+        chai.request(server)
+            .get('/api/company')
+            //.send(book)
+            .end((err, res) => {
+                res.should.have.status(200);
+                let result = JSON.parse(res.body);
+                result.should.be.a('object');
+                result.should.have.property('companies');
+                result.companies[0].should.have.property('logo');
+                result.companies[0].should.have.property('location');
+                result.companies[0].should.have.property('name').eql('lechDev XXXX:)');
+                // TODO: lechDev add the rest of properties
+                taskMapperMock.verify();
+                taskMapperMock.restore();
+                done();
+            });
+    });
+
+    it('it should GET compnay by id (/company/<company id>', (done) => {
         const taskMapperMock = sinon.mock(taskMapper.getCompanyById);
         taskMapperMock.expects('fnc').once().returns(Promise.resolve(getCompany()));
 
         chai.request(server)
-            .get('/company/123')
+            .get('/api/company/123')
             //.send(book)
             .end((err, res) => {
                 res.should.have.status(200);
@@ -87,16 +93,13 @@ describe('/GET/company/123', () => {
             });
 
     });
-});
 
-
-describe('/POST/company', () => {
-    it('it should (POST) create a company', (done) => {
+    it('it should (POST) create a company (POST/api/company)', (done) => {
         const taskMapperMock = sinon.mock(taskMapper.createCompany);
         taskMapperMock.expects('fnc').once().returns(Promise.resolve('{ "companyId": 1357 }'));
 
         chai.request(server)
-            .post('/company')
+            .post('/api/company')
             //.send(book)
             .end((err, res) => {
                 res.should.have.status(200);
@@ -109,15 +112,14 @@ describe('/POST/company', () => {
                 done();
             });
     });
-});
 
-describe('/PUT/company?company_id=123', () => {
-    it('it should (PUT) update company', (done) => {
+
+    it('it should (PUT) update company (PUT/api/company)', (done) => {
         const taskMapperMock = sinon.mock(taskMapper.updateCompany);
         taskMapperMock.expects('fnc').once().returns(Promise.resolve('{ "companyId": 1357 }'));
 
         chai.request(server)
-            .put('/company?company_id=5986b8180a8ea07f6155858d')
+            .put('/api/company')
             //.send(book)
             .end((err, res) => {
                 res.should.have.status(200);
@@ -130,15 +132,14 @@ describe('/PUT/company?company_id=123', () => {
                 done();
             });
     });
-});
 
-describe('/PATCH/company/123/app_settings/preferred_language', () => {
-    it('it should PATCH the preferred language', (done) => {
-        const taskMapperMock = sinon.mock(taskMapper.updateLanguage);
+
+    it('it should (PUT) update company (PUT/api/company)(LANGUAGE)', (done) => {
+        const taskMapperMock = sinon.mock(taskMapper.updateCompany);
         taskMapperMock.expects('fnc').once().returns(Promise.resolve('{ "language": "es" }'));
 
         chai.request(server)
-            .patch('/company/123/app_settings/preferred_language')
+            .put('/api/company')
             .send({
                 'preferredLanguage': 'es'
             })
@@ -146,13 +147,13 @@ describe('/PATCH/company/123/app_settings/preferred_language', () => {
                 res.should.have.status(200);
                 let result = JSON.parse(res.body);
                 result.should.have.property('language').eql("es");
-                // TODO: lechDev add the rest of properties
                 taskMapperMock.verify();
                 taskMapperMock.restore();
                 done();
             });
     });
 });
+
 
 var getJson = function () {
     return '{"companies":[{"_id":"5993c0c6db979e55240ac213",' +

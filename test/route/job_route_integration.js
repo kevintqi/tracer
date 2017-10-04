@@ -7,33 +7,47 @@ const chai = require('chai');
 const assert = require('chai').assert;
 const chaiHttp = require('chai-http');
 const server = require('../../bin/www');
+const sinon = require('sinon');
 const should = chai.should();
+const User = require('../../app/model/user');
 
 chai.use(chaiHttp);
 
-describe('INTEGRATION TEST for JOB Requests', () => {
+describe('INTEGRATION TEST for JOB Requests: job_route_integration.js', () => {
     beforeEach((done) => {
-        // Put code here
         JobModel.remove({}, function (err) {
             if (err) {
                 console.log(err)
             } else {
                 console.log('Cleared job info');
             }
-            done();
         });
+
+        sinon.stub(server.request, 'isAuthenticated').callsFake(function (req, res, next) {
+            return true;
+        });
+
+        var user = new User();
+        user.local.lang = 'en-us';
+        user.local.role = 'manager';
+        user.local.group = 'acc_1_out_for_service';
+        user.local.companyId = '5986b8180a8ea07f6155858d';
+        server.request.user = user;
+
+        done();
     });
 
-    it('it should (POST) create a job', (done) => {
+    afterEach(function () {
+        server.request.isAuthenticated.restore();
+    });
+
+    it('it should (POST) create a job (/api/job)', (done) => {
         chai.request(server)
-            .post('/job')
-            .query({
-                company_id: '5986b8180a8ea07f6155858d'
-            })
+            .post('/api/job')
             .send(JSON.parse(getJob()))
             .end((err, res) => {
                 res.should.have.status(200);
-                let result = JSON.parse(res.body);
+                let result = res.body;
                 result.should.be.a('object');
                 result.should.have.property('jobId')
                 assert(result.jobId.match(/^[0-9a-fA-F]{24}$/));
@@ -41,34 +55,34 @@ describe('INTEGRATION TEST for JOB Requests', () => {
             });
     });
 
-    it('it should GET job by company id', (done) => {
+    it('it should GET job by id (/api/job/<job_id>', (done) => {
         var options = {
             'companyId': '5986b8180a8ea07f6155858d',
             'jobData': getJob()
         }
 
+        var jobId;
         job.create(options).then(data => {
-            console.log('created job');
+            const jobObj = data;
+            jobId = jobObj.jobId;
+
+            chai.request(server)
+                .get('/api/job/' + jobId)
+                .end((err, res) => {
+                    res.should.have.status(200);
+                    let result = res.body;
+                    result.should.be.a('object');
+                    result.should.have.property('job');
+                    result.job.should.have.length.above(0);
+                    result.job[0].contact.should.have.property('name').eql('Kevin');
+                    // TODO: lechDev add the rest of properties
+                    done();
+                });
         }).catch(err => {
             console.log(err)
         });
-
-        chai.request(server)
-            .get('/job')
-            .query({
-                company_id: '5986b8180a8ea07f6155858d'
-            })
-            .end((err, res) => {
-                res.should.have.status(200);
-                let result = JSON.parse(res.body);
-                result.should.be.a('object');
-                result.should.have.property('jobs');
-                result.jobs.should.have.length.above(0);
-                result.jobs[0].contact.should.have.property('name').eql('Kevin');
-                // TODO: lechDev add the rest of properties
-                done();
-            });
     });
+
 
     it('it should PATCH (Assignment)', (done) => {
         var assigneeId = '2222b8180a8ea07f61551111';
@@ -79,31 +93,27 @@ describe('INTEGRATION TEST for JOB Requests', () => {
 
         var jobId;
         job.create(options).then(data => {
-            const jobObj = JSON.parse(data);
-            // jobObj.jobId;
+            const jobObj = data;
             chai.request(server)
-                .patch('/job/' + jobObj.jobId + '/update')
+                .patch('/api/job/' + jobObj.jobId + '/update')
                 .send({
                     assignee: assigneeId
                 })
                 .end((err, res) => {
                     res.should.have.status(200);
-                    let result = JSON.parse(res.body);
+                    let result = res.body;
                     result.should.be.a('object');
                     result.should.have.property('assignee').eql(assigneeId);
 
                     chai.request(server)
-                        .get('/job')
-                        .query({
-                            company_id: '5986b8180a8ea07f6155858d'
-                        })
+                        .get('/api/job/' + jobObj.jobId)
                         .end((err, res) => {
                             res.should.have.status(200);
-                            let result = JSON.parse(res.body);
+                            let result = res.body;
                             result.should.be.a('object');
-                            result.should.have.property('jobs');
-                            result.jobs.should.have.length.above(0);
-                            result.jobs[0].should.have.property('assignee').eql(assigneeId);
+                            result.should.have.property('job');
+                            result.job.should.have.length.above(0);
+                            result.job[0].should.have.property('assignee').eql(assigneeId);
                             done();
                         });
                 });
@@ -111,6 +121,7 @@ describe('INTEGRATION TEST for JOB Requests', () => {
             console.log(err)
         });
     });
+
 
     it('it should PATCH (Status)', (done) => {
         var assigneeId = '2222b8180a8ea07f61551111';
@@ -121,10 +132,9 @@ describe('INTEGRATION TEST for JOB Requests', () => {
 
         var jobId;
         job.create(options).then(data => {
-            const jobObj = JSON.parse(data);
-            // jobObj.jobId;
+            const jobObj = data
             chai.request(server)
-                .patch('/job/' + jobObj.jobId + '/update')
+                .patch('/api/job/' + jobObj.jobId + '/update')
                 .send({
                     'status': 'Done',
                     'statusIcon': 'images/check.png',
@@ -139,7 +149,7 @@ describe('INTEGRATION TEST for JOB Requests', () => {
                 })
                 .end((err, res) => {
                     res.should.have.status(200);
-                    let result = JSON.parse(res.body);
+                    let result = res.body;
                     result.should.be.a('object');
                     result.should.have.property('status').eql('Done');
                     result.should.have.property('statusIcon').eql('images/check.png');
@@ -154,27 +164,24 @@ describe('INTEGRATION TEST for JOB Requests', () => {
                     result.actualSchedule.time.should.have.property('end').eql(date.toISOString());
 
                     chai.request(server)
-                        .get('/job')
-                        .query({
-                            company_id: '5986b8180a8ea07f6155858d'
-                        })
+                        .get('/api/job/' + jobObj.jobId)
                         .end((err, res) => {
                             res.should.have.status(200);
-                            let result = JSON.parse(res.body);
+                            let result = res.body;
                             result.should.be.a('object');
-                            result.should.have.property('jobs');
-                            result.jobs.should.have.length.above(0);
-                            result.jobs[0].should.have.property('status').eql('Done');
-                            result.jobs[0].should.have.property('statusIcon').eql('images/check.png');
-                            result.jobs[0].actualSchedule.should.have.property('startDate');
+                            result.should.have.property('job');
+                            result.job.should.have.length.above(0);
+                            result.job[0].should.have.property('status').eql('Done');
+                            result.job[0].should.have.property('statusIcon').eql('images/check.png');
+                            result.job[0].actualSchedule.should.have.property('startDate');
                             var date = new Date(1503770535555);
-                            result.jobs[0].actualSchedule.should.have.property('startDate').eql(date.toISOString());
+                            result.job[0].actualSchedule.should.have.property('startDate').eql(date.toISOString());
                             date = new Date(1503770536666);
-                            result.jobs[0].actualSchedule.should.have.property('endDate').eql(date.toISOString());
+                            result.job[0].actualSchedule.should.have.property('endDate').eql(date.toISOString());
                             date = new Date(1503770531111);
-                            result.jobs[0].actualSchedule.time.should.have.property('start').eql(date.toISOString());
+                            result.job[0].actualSchedule.time.should.have.property('start').eql(date.toISOString());
                             date = new Date(1503770532222);
-                            result.jobs[0].actualSchedule.time.should.have.property('end').eql(date.toISOString());
+                            result.job[0].actualSchedule.time.should.have.property('end').eql(date.toISOString());
                             done();
                         });
                 });

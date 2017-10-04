@@ -70,6 +70,7 @@ module.exports = function(passport) {
                 newUser.local.role     = 'manager';
                 //newUser.local.group    = 'default';
                 newUser.local.group    = 'acc_1_out_for_service';
+                newUser.local.companyId = '5986b8180a8ea07f6155858d';
 
                 // save the user
                 newUser.save(function(err) {

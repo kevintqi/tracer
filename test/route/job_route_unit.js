@@ -9,90 +9,125 @@ const chaiHttp = require('chai-http');
 const server = require('../../bin/www');
 const sinon = require('sinon');
 const should = chai.should();
+const User = require('../../app/model/user');
 
 chai.use(chaiHttp);
 
-describe('UNIT TEST for JOB Requests', () => {
-    /*   beforeEach((done) => {
-           // Put code here
-      });
-    */
-
-    describe('/GET/job?company_id=123', () => {
-        it('it should GET job by customer id', (done) => {
-            var retJobs = {
-                'jobs': []
-            };
-            retJobs.jobs.push(getJob());
-            const taskMapperMock = sinon.mock(taskMapper.getJobByCompanyId);
-            taskMapperMock.expects('fnc').once().returns(
-                Promise.resolve(JSON.stringify(retJobs)));
-
-            chai.request(server)
-                .get('/job?company_id=5986b8180a8ea07f6155858d')
-                .end((err, res) => {
-                    res.should.have.status(200);
-                    let result = JSON.parse(res.body);
-                    result.should.be.a('object');
-                    result.should.have.property('jobs');
-                    result.jobs.should.have.length.above(0);
-                    let jobOne = JSON.parse(result.jobs[0]);
-                    jobOne.contact.should.have.property('name').eql('Kevin');
-                    // TODO: lechDev add the rest of properties
-                    taskMapperMock.verify();
-                    taskMapperMock.restore();
-                    done();
-                });
+describe('UNIT TEST for JOB Requests: job_route_unit.js', () => {
+    beforeEach(function () {
+        sinon.stub(server.request, 'isAuthenticated').callsFake(function (req, res, next) {
+            return true;
         });
+
+        var user = new User();
+        user.local.lang = 'en-us';
+        user.local.role = 'manager';
+        user.local.group = 'acc_1_out_for_service';
+        user.local.companyId = '5986b8180a8ea07f6155858d';
+        server.request.user = user;
     });
 
-    describe('/POST/job?company_id=123', () => {
-        it('it should (POST) crate a job with company ID', (done) => {
-            const taskMapperMock = sinon.mock(taskMapper.createJob);
-            taskMapperMock.expects('fnc').once().returns(
-                Promise.resolve('{ "jobId": "5986b8180a8ea07f6155858d"}'));
-            chai.request(server)
-                .post('/job')
-                .query({
-                    company_id: '123'
-                })
-                .send(getJob())
-                .end((err, res) => {
-                    res.should.have.status(200);
-                    let result = JSON.parse(res.body);
-                    result.should.be.a('object');
-                    result.should.have.property('jobId')
-                    assert(result.jobId.match(/^[0-9a-fA-F]{24}$/));
-                    taskMapperMock.verify();
-                    taskMapperMock.restore();
-                    done();
-                });
-        });
+    afterEach(function () {
+        server.request.isAuthenticated.restore();
     });
 
-    describe('/PATCH/job?company_id=123', () => {
-        var assigneeId = '2222b8180a8ea07f61551111';
-        it('it should (PATCH) update job based on company id', (done) => {
-            const retJson = JSON.parse(getJob());
-            retJson.assignee = assigneeId;
-            const taskMapperMock = sinon.mock(taskMapper.updateJob);
-            taskMapperMock.expects('fnc').once().returns(
-                Promise.resolve(JSON.stringify(retJson)));
-            chai.request(server)
-                .patch('/job/123/update')
-                .send({
-                    assignee: assigneeId
-                })
-                .end((err, res) => {
-                    res.should.have.status(200);
-                    let result = JSON.parse(res.body);
-                    result.should.be.a('object');
-                    result.should.have.property('assignee').eql(assigneeId);
-                    taskMapperMock.verify();
-                    taskMapperMock.restore();
-                    done();
-                });
-        });
+
+    it('it should GET all the jobs (/api/jobs)', (done) => {
+
+        var retJobs = {
+            'jobs': []
+        };
+
+        retJobs.jobs.push(getJob());
+        const taskMapperMock = sinon.mock(taskMapper.getJobs);
+        taskMapperMock.expects('fnc').once().returns(
+            Promise.resolve(retJobs));
+
+        chai.request(server)
+            .get('/api/jobs')
+            .end((err, res) => {
+                res.should.have.status(200);
+                let result = res.body;
+                result.should.be.a('object');
+                result.should.have.property('jobs');
+                result.jobs.should.have.length.above(0);
+                let jobOne = JSON.parse(result.jobs[0]);
+                jobOne.contact.should.have.property('name').eql('Kevin');
+                taskMapperMock.verify();
+                taskMapperMock.restore();
+                done();
+            });
+    });
+
+    it('it should GET job by id(/api/job/<job_id>', (done) => {
+        var retJobs = {
+            'jobs': []
+        };
+        retJobs.jobs.push(getJob());
+        const taskMapperMock = sinon.mock(taskMapper.getJob);
+        taskMapperMock.expects('fnc').once().returns(
+            Promise.resolve(JSON.stringify(retJobs)));
+
+        chai.request(server)
+            .get('/api/job/5986b8180a8ea07f6155858d')
+            .end((err, res) => {
+                res.should.have.status(200);
+                let result = JSON.parse(res.body);
+                result.should.be.a('object');
+                result.should.have.property('jobs');
+                result.jobs.should.have.length.above(0);
+                let jobOne = JSON.parse(result.jobs[0]);
+                jobOne.contact.should.have.property('name').eql('Kevin');
+                // TODO: lechDev add the rest of properties
+                taskMapperMock.verify();
+                taskMapperMock.restore();
+                done();
+            });
+    });
+
+    it('it should (POST) create a job (/api/job', (done) => {
+        const taskMapperMock = sinon.mock(taskMapper.createJob);
+        taskMapperMock.expects('fnc').once().returns(
+            Promise.resolve('{ "jobId": "5986b8180a8ea07f6155858d"}'));
+        chai.request(server)
+            .post('/api/job')
+            /*.query({
+                company_id: '123'
+            })*/
+            .send(getJob())
+            .end((err, res) => {
+                res.should.have.status(200);
+                let result = JSON.parse(res.body);
+                result.should.be.a('object');
+                result.should.have.property('jobId')
+                assert(result.jobId.match(/^[0-9a-fA-F]{24}$/));
+                taskMapperMock.verify();
+                taskMapperMock.restore();
+                done();
+            });
+    });
+
+    var assigneeId = '2222b8180a8ea07f61551111';
+    it('it should (PATCH) update job based on job id (/job/<job_id>/update)', (done) => {
+        const retJson = JSON.parse(getJob());
+        retJson.assignee = assigneeId;
+        const taskMapperMock = sinon.mock(taskMapper.updateJob);
+        taskMapperMock.expects('fnc').once().returns(
+            Promise.resolve(JSON.stringify(retJson)));
+        chai.request(server)
+            .patch('/api/job/123/update')
+            .send({
+                assignee: assigneeId
+            })
+            .end((err, res) => {
+                res.should.have.status(200);
+                let result = JSON.parse(res.body);
+                result.should.be.a('object');
+                result.should.have.property('assignee').eql(assigneeId);
+                taskMapperMock.verify();
+                taskMapperMock.restore();
+                done();
+            });
     });
 });
 
