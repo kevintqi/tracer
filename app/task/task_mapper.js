@@ -2,6 +2,7 @@
 
 const company = require('../entity/company');
 const job = require('../entity/job');
+const locationLog = require('../entity/location_log');
 
 // taskMapper
 const taskMapper = {
@@ -43,6 +44,21 @@ const taskMapper = {
     'updateJob': {
         'fnc': job.update,
         'name': 'updateJob'
+    },
+    ///////
+    // LOCATION LOG
+    ///////
+    'getLocationLogs': {
+        'fnc': locationLog.getAll,
+        'name': 'getLocationLogs'
+    },
+    'getlocationLogByJobId': {
+        'fnc': locationLog.getByJobId,
+        'name': 'getlocationLogByJobId'
+    },
+    'createLocationLog': {
+        'fnc': locationLog.create,
+        'name': 'createLocationLog'
     }
 };
 

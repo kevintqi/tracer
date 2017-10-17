@@ -464,8 +464,9 @@ https://localhost:3000/job
 * `500`, unexpected runtime error
 ---
 
-
-
+<!-- *************************************************************************************************************-->
+<!-- *************************************************************************************************************-->
+<!-- *************************************************************************************************************-->
 
 ## PATCH updates a job based on company id. 
 Updates a job based on a company id.  <br>
@@ -535,6 +536,167 @@ Any element of the job json object. Note that the structure of the json must be 
 * `500`, unexpected runtime error
 ---
 
+<!-- *************************************************************************************************************-->
+<!-- *************************************************************************************************************-->
+<!-- *************************************************************************************************************-->
+
+## GET location logs 
+Retrieves all the location logs associated with the company.  <br>
+`/api/location_logs`
+
+### Code examples
+```http
+https://localhost:3000/location_logs
+```
+| Parameter | Required | Options |Description |
+|----------|----------|--------------|-------------|
+| n/a | n/a | n/a | n/a |
+
+### Input Data
+none
+
+### Response Data
+```json
+{
+    "locationLogs": [
+        {
+            "_id": "59e42060ab1a31443a3fc6ba",
+            "jobId": "5986b8180a8ea07f61558999",
+            "companyId": "5986b8180a8ea07f6155858d",
+            "__v": 0,
+            "dateLog": "2017-10-16T02:58:40.333Z",
+            "location": {
+                "lat": 34.1022,
+                "lng": -118.2737
+            }
+        },
+        {
+            "_id": "59e4283c982b0d9b4679e3c1",
+            "jobId": "5986b8180a8ea07f61558999",
+            "companyId": "5986b8180a8ea07f6155858d",
+            "__v": 0,
+            "dateLog": "2017-10-16T03:32:12.867Z",
+            "location": {
+                "lat": 800.3333,
+                "lng": -1.7331
+            }
+        }
+    ]
+}
+```
+
+### Successful Post-conditions
+* A successful status and the data are returned
+
+### Error Post-conditions
+* `400`, Bad request 
+* `401`, Unauthorized 
+* `404`, service not available
+* `500`, unexpected runtime error
+---
+
+<!-- *************************************************************************************************************-->
+<!-- *************************************************************************************************************-->
+<!-- *************************************************************************************************************-->
+
+## GET location logs based on job id 
+Retrieves all logs based on a job id  <br>
+`/api/location_log?jobId=<job_id>`
+
+### Code examples
+```http
+https://localhost:3000/location_log?jobId=<job_id>
+```
+| Parameter | Required | Options |Description |
+|----------|----------|--------------|-------------|
+| jobId | yes | n/a | This is a query parameter. |
+
+### Input Data
+none
+
+### Response Data
+```json
+{
+    "locationLogs": [
+        {
+            "_id": "59e42060ab1a31443a3fc6ba",
+            "jobId": "5986b8180a8ea07f61558999",
+            "companyId": "5986b8180a8ea07f6155858d",
+            "__v": 0,
+            "dateLog": "2017-10-16T02:58:40.333Z",
+            "location": {
+                "lat": 34.1022,
+                "lng": -118.2737
+            }
+        },
+        {
+            "_id": "59e4283c982b0d9b4679e3c1",
+            "jobId": "5986b8180a8ea07f61558999",
+            "companyId": "5986b8180a8ea07f6155858d",
+            "__v": 0,
+            "dateLog": "2017-10-16T03:32:12.867Z",
+            "location": {
+                "lat": 800.3333,
+                "lng": -1.7331
+            }
+        }
+    ]
+}
+```
+
+### Successful Post-conditions
+* A successful status and the data are returned
+
+### Error Post-conditions
+* `400`, Bad request 
+* `401`, Unauthorized 
+* `404`, service not available
+* `500`, unexpected runtime error
+---
+
+<!-- *************************************************************************************************************-->
+<!-- *************************************************************************************************************-->
+<!-- *************************************************************************************************************-->
+
+## POST create location log entry 
+Create a location log entry  <br>
+`/api/location_log`
+
+### Code examples
+```http
+https://localhost:3000/location_logs
+```
+| Parameter | Required | Options |Description |
+|----------|----------|--------------|-------------|
+| n/a | n/a | n/a | n/a |
+
+### Input Data
+```json
+{
+   "jobId": "5986b8180a8ea07f61558999",
+   "location": {
+      "lat": 800.3333,
+      "lng": -1.7331
+   }
+}
+```
+
+### Response Data
+```json
+{
+    "dateLog": "2017-10-17T02:35:38.495Z"
+}
+```
+
+### Successful Post-conditions
+* A successful status and the data are returned
+
+### Error Post-conditions
+* `400`, Bad request 
+* `401`, Unauthorized 
+* `404`, service not available
+* `500`, unexpected runtime error
+---
 
 # DEV Notes
 1. validate that a update and patch really took placed in copy_.

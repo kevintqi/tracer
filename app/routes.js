@@ -165,10 +165,11 @@ module.exports = function (app, passport) {
 
     const companyDispatcher = require('./controller/company_dispatcher');
     const jobDispatcher = require('./controller/job_dispatcher');
+    const locationLogDispatcher = require('./controller/locationLog_dispatcher');
 
     /**
      * @swagger
-     * /companies:
+     * /api/companies:
      *   get:
      *     description: Retrieves all the companies 
      *     produces:
@@ -176,28 +177,27 @@ module.exports = function (app, passport) {
      *     responses:
      *       200:
      *         description: Succesful request 
-     *       400:
-     *         description: Bad request 
+     *       401:
+     *         description: Unauthorized
      *       404:
      *         description: Request not found 
      *       500:
      *         description: Generic error
      */
-    app.get('/api/companies', companyDispatcher.getCompanies);
+    app.get('/api/companies', isLoggedIn, companyDispatcher.getCompanies);
 
     /**
      * @swagger
-     * /company?customer_id=123:
+     * /api/company:
      *   get:
-     *     description: Retrieves a company based on a customer id. 
-      *    query variable: customer_id
+     *     description: Retrieves company information
      *     produces:
      *       - application/json
      *     responses:
      *       200:
      *         description: Succesful request 
-     *       400:
-     *         description: Bad request 
+     *       401:
+     *         description: Unauthorized
      *       404:
      *         description: Request not found 
      *       500:
@@ -207,7 +207,7 @@ module.exports = function (app, passport) {
 
     /**
      * @swagger
-     * /company/<company_id>:
+     * /api/company/<company_id>:
      *   get:
      *     description: Retrieves a company based on a company id. 
      *     param variable: company_id
@@ -216,8 +216,8 @@ module.exports = function (app, passport) {
      *     responses:
      *       200:
      *         description: Succesful request 
-     *       400:
-     *         description: Bad request 
+     *       401:
+     *         description: Unauthorized
      *       404:
      *         description: Request not found 
      *       500:
@@ -227,7 +227,7 @@ module.exports = function (app, passport) {
 
     /**
      * @swagger
-     * /company:
+     * /api/company:
      *   post:
      *     description: Creates a company 
      *     produces:
@@ -235,8 +235,8 @@ module.exports = function (app, passport) {
      *     responses:
      *       200:
      *         description: Succesful request 
-     *       400:
-     *         description: Bad request 
+     *       401:
+     *         description: Unauthorized
      *       404:
      *         description: Request not found 
      *       500:
@@ -246,17 +246,16 @@ module.exports = function (app, passport) {
 
     /**
      * @swagger
-     * /company?company_id=123:
+     * /api/company
      *   put:
-     *     description: Updates a company based on id. 
-      *    query variable: company_id
+     *     description: Updates the company 
      *     produces:
      *       - application/json
      *     responses:
      *       200:
      *         description: Succesful request 
-     *       400:
-     *         description: Bad request 
+     *       401:
+     *         description: Unauthorized
      *       404:
      *         description: Request not found 
      *       500:
@@ -266,24 +265,22 @@ module.exports = function (app, passport) {
 
     /**
      * @swagger
-     * /job?company_id=123:
+     * /api/jobs
      *   get:
-     *     description: Retrieves a job based on a company id. 
-      *    query variable: company_id
+     *     description: Retrieves all the jobs associated with the company 
      *     produces:
      *       - application/json
      *     responses:
      *       200:
      *         description: Succesful request 
-     *       400:
-     *         description: Bad request 
+     *       401:
+     *         description: Unauthorized
      *       404:
      *         description: Request not found 
      *       500:
      *         description: Generic error
      */
     app.get('/api/jobs', isLoggedIn,  jobDispatcher.getJobs);
-    //app.get('/api/jobs', jobDispatcher.getJobs);
 
     app.get('/api/job/:job_id', jobDispatcher.getJob);
 
@@ -291,7 +288,7 @@ module.exports = function (app, passport) {
 
     /**
      * @swagger
-     * /job/<job_id>/update:
+     * /api/job/<job_id>/update:
      *   get:
      *     description: Updates a job based on id. 
      *     param variable: job_id
@@ -300,8 +297,8 @@ module.exports = function (app, passport) {
      *     responses:
      *       200:
      *         description: Succesful request 
-     *       400:
-     *         description: Bad request 
+     *       401:
+     *         description: Unauthorized
      *       404:
      *         description: Request not found 
      *       500:
@@ -309,6 +306,62 @@ module.exports = function (app, passport) {
      */
     app.patch('/api/job/:job_id/update', jobDispatcher.updateJob);
 
+    /**
+     * @swagger
+     * /api/location_logs:
+     *   get:
+     *     description: Retrieves all the location logs 
+     *     produces:
+     *       - application/json
+     *     responses:
+     *       200:
+     *         description: Succesful request 
+     *       401:
+     *         description: Unauthorized
+     *       404:
+     *         description: Request not found 
+     *       500:
+     *         description: Generic error
+     */
+    app.get('/api/location_logs', isLoggedIn, locationLogDispatcher.getLogs);
+
+    /**
+     * @swagger
+     * /api/location_log?jobId=<job_id>:
+     *   get:
+     *     description: Retrieves a location logs based on a job id. 
+     *     produces:
+     *       - application/json
+     *     responses:
+     *       200:
+     *         description: Succesful request 
+     *       401:
+     *         description: Unauthorized
+     *       404:
+     *         description: Request not found 
+     *       500:
+     *         description: Generic error
+     */
+    app.get('/api/location_log', isLoggedIn, locationLogDispatcher.getByJobId);
+
+    /**
+     * @swagger
+     * /api/location_log:
+     *   get:
+     *     description: creates a location log entry 
+     *     produces:
+     *       - application/json
+     *     responses:
+     *       200:
+     *         description: Succesful request 
+     *       401:
+     *         description: Unauthorized
+     *       404:
+     *         description: Request not found 
+     *       500:
+     *         description: Generic error
+     */
+    app.post('/api/location_log', isLoggedIn, locationLogDispatcher.create);
 
     //https://stackoverflow.com/questions/20089582/how-to-get-url-parameter-in-express-node-js
 };

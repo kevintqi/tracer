@@ -120,13 +120,14 @@ describe('Route Test for company: company_route_unit.js', () => {
 
         chai.request(server)
             .put('/api/company')
-            //.send(book)
+            .send({
+                "none": "none"
+            })
             .end((err, res) => {
                 res.should.have.status(200);
                 let result = JSON.parse(res.body);
                 result.should.be.a('object');
                 result.should.have.property('companyId').eql(1357);
-                // TODO: lechDev add the rest of properties
                 taskMapperMock.verify();
                 taskMapperMock.restore();
                 done();

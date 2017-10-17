@@ -31,7 +31,9 @@ class Task {
         }
 
         for (var attributename in this.option) {
-            if (this.option[attributename] === undefined) {
+            if ((this.option[attributename] === undefined) ||
+                (!Object.keys(this.option[attributename]).length)) {
+                log.error("option is invalid: " + attributename);
                 return false;
             }
         }
