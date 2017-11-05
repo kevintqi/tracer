@@ -1,7 +1,9 @@
 /**
  * @class Task
  **/
+const isJSON = require('is-json');
 const Handler = require('../task/handler');
+const log = require('../lib/log');
 const taskMapper = require('./task_mapper');
 
 /**
@@ -30,11 +32,13 @@ class Task {
             return false;
         }
 
-        for (var attributename in this.option) {
-            if ((this.option[attributename] === undefined) ||
-                (!Object.keys(this.option[attributename]).length)) {
-                log.error("option is invalid: " + attributename);
-                return false;
+        if (isJSON(this.option, true)) {
+            for (var attributename in this.option) {
+                if ((this.option[attributename] === undefined) ||
+                    (Object.keys(this.option[attributename]).length === 0)) {
+                    log.error("option is invalid: " + attributename);
+                    return false;
+                }
             }
         }
         return true;
