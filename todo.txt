@@ -1,5 +1,8 @@
 1. Test APIs with wrong arguments
 2. Homepage to set the companyID and create profile
-3. Create API to GET and POST location information
+3. Have unit test use a different database 
+   a. set env to development
+4. Remove hard code values for the profile
+   a. exmample the companyID id the profile
 
 sudo docker run -d -p 27017:27017 -v ~/data:/data/db mongo

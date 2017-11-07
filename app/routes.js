@@ -17,44 +17,40 @@ module.exports = function (app, passport) {
             // user fails authorisation
             var accept = req.headers.accept || '';
             res.status(403);
-            if (~accept.indexOf('html')) {
-                // TODO: lechDev need to implement this page
-                res.render('access-denied.ejs', {
-                    action: action
-                });
-            } else {
-                res.send('Access Denied - You don\'t have permission to: ' + action);
-            }
+            res.send('Access Denied - You don\'t have permission to: ' + action);
         }
     });
     app.use(user.middleware());
 
     //users logged can access to public pages
     user.use(function (req, action) {
-        if (req.isAuthenticated() && action != access.actionAdminPage && action != access.actionAppPage &&
-            action != access.actionClientPage)
+        if (req.isAuthenticated() && action != access.actionAdmin && action != access.actionManager &&
+            action != access.actionEmployee)
             return true;
     });
 
     //moderator users can access private page, but
     //they might not be the only ones so we don't return
     //false if the user isn't a moderator
-    user.use(access.actionAppPage, function (req) {
-        console.log(access.actionAppPage);
-        if (req.user.local.role === access.table.manager.role) {
+    user.use(access.actionManager, function (req) {
+        console.log(access.actionManager);
+        if ((req.user.local.role === access.table.manager.role) ||
+            (req.user.local.role === access.table.admin.role)) {
             return true;
         }
     });
 
-    user.use(access.actionClientPage, function (req) {
-        console.log(access.actionClientPage);
-        if (req.user.local.role === access.table.employee.role) {
+    user.use(access.actionEmployee, function (req) {
+        console.log(access.actionEmployee);
+        if ((req.user.local.role === access.table.employee.role) ||
+            (req.user.local.role === access.table.admin.role) ||
+            (req.user.local.role === access.table.manager.role)) {
             return true;
         }
     });
 
-    user.use(access.actionAdminPage, function (req) {
-        console.log(access.actionAdminPage);
+    user.use(access.actionAdmin, function (req) {
+        console.log(access.actionAdmin);
         if (req.user.local.role === access.table.admin.role) {
             return true;
         }
@@ -72,75 +68,23 @@ module.exports = function (app, passport) {
     app.post('/lang', profile.setLang);
 
     // =====================================
-    // HOME PAGE (with login links) ========
-    // =====================================
-    app.get('/', function (req, res) {
-        var retMsg;
-        var state = false;
-        if (req.isAuthenticated()) {
-            retMsg = req.user.local.email
-            state = true;
-        } else {
-            retMsg = "Please <a href=\"/login\" >Login</a>";
-            state = false;
-        }
-
-        res.render('index.ejs', {
-            msg: retMsg,
-            login: state
-        });
-    });
-
-    // =====================================
     // LOGIN ===============================
     // =====================================
-    // show the login form
-    app.get('/login', function (req, res) {
-
-        // render the page and pass in any flash data if it exists
-        res.render('login.ejs', {
-            message: req.flash('loginMessage')
-        });
-    });
-
     // process the login form
-    app.post('/login', passport.authenticate('local-login', {
-        successRedirect: '/out_for_service', // redirect to the secure profile section
-        failureRedirect: '/login', // redirect back to the signup page if there is an error
-        failureFlash: true // allow flash messages
-    }));
+    app.post('/login', passport.authenticate('local-login', {}), function (req, res) {
+        if (req.isAuthenticated()) {
+            res.json("{ 'status': 'success' }");
+        } else {
+            res.status(500).send("Internal Server Error");
+        }
+    });
 
     // =====================================
     // SIGNUP ==============================
     // =====================================
-    // show the signup form
-    app.get('/signup', function (req, res) {
-
-        // render the page and pass in any flash data if it exists
-        res.render('signup.ejs', {
-            message: req.flash('signupMessage')
-        });
-    });
-
     // process the signup form
-    app.post('/signup', passport.authenticate('local-signup', {
-        successRedirect: '/profile', // redirect to the secure profile section
-        failureRedirect: '/signup', // redirect back to the signup page if there is an error
-        failureFlash: true // allow flash messages
-    }));
-
-    // process the signup form
-    // app.post('/signup', do all our passport stuff here);
-
-    // =====================================
-    // PROFILE SECTION =====================
-    // =====================================
-    // we will want this protected so you have to be logged in to visit
-    // we will use route middleware to verify this (the isLoggedIn function)
-    app.get('/profile', isLoggedIn, function (req, res) {
-        res.render('profile.ejs', {
-            user: req.user // get the user out of session and pass to template
-        });
+    app.post('/signup', passport.authenticate('local-signup', {}), function (req, res) {
+        res.json("{ 'status': 'success' }");
     });
 
     // =====================================
@@ -148,15 +92,10 @@ module.exports = function (app, passport) {
     // =====================================
     app.get('/logout', function (req, res) {
         req.logout();
-        res.redirect('/');
-    });
-
-    app.get('/out_for_service', isLoggedIn, user.can(access.actionAppPage), function (req, res) {
-        const l10n = new L10n(req.user.local.lang);
-        res.render(req.user.local.group, {
-            user: req.user,
-            translate: l10n.action.translate
-        });
+        const status = {
+            'msg': 'successful logout'
+        };
+        res.json(status);
     });
 
     // =========================================
@@ -223,7 +162,7 @@ module.exports = function (app, passport) {
      *       500:
      *         description: Generic error
      */
-    app.get('/api/company/:company_id', companyDispatcher.getCompanyById);
+    app.get('/api/company/:company_id', isLoggedIn, companyDispatcher.getCompanyById);
 
     /**
      * @swagger
@@ -242,7 +181,7 @@ module.exports = function (app, passport) {
      *       500:
      *         description: Generic error
      */
-    app.post('/api/company', companyDispatcher.createCompany);
+    app.post('/api/company', user.can(access.actionEmployee), companyDispatcher.createCompany);
 
     /**
      * @swagger
@@ -280,7 +219,7 @@ module.exports = function (app, passport) {
      *       500:
      *         description: Generic error
      */
-    app.get('/api/jobs', isLoggedIn,  jobDispatcher.getJobs);
+    app.get('/api/jobs', isLoggedIn, jobDispatcher.getJobs);
 
     app.get('/api/job/:job_id', jobDispatcher.getJob);
 
@@ -374,9 +313,7 @@ function isLoggedIn(req, res, next) {
         return next();
 
     if (req.originalUrl.startsWith('/api/')) {
-        return res.send(401, 'Unauthorized');
+        return res.status(401).send('401, Unauthorized')
     }
-
-    // if they aren't redirect them to the home page
-    res.redirect('/login');
+    return true;
 }

@@ -9,6 +9,7 @@ var passport = require('passport');
 var flash    = require('connect-flash');
 var configDB = require('./config/database.js');
 var session      = require('express-session');
+const log = require('./app/lib/log');
 
 // configuration ===============================================================
 mongoose.connect(configDB[configDB.default]); // connect to our database
@@ -50,9 +51,10 @@ app.use(function(err, req, res, next) {
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+  let status = (err.status || 500);
+  log.error(status + ": " + err.toString());
+  res.writeHead(status);
+  res.end(err.toString());
 });
 
 module.exports = app;

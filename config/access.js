@@ -10,8 +10,7 @@ module.exports = {
             'role': 'employee'
         }
     },
-    'actionAdminPage': 'access_admin_page',
-    'actionAppPage': 'access_app_page',
-    'actionHomePage': 'access_home_page',
-    'actionClientPage': 'access_client_page'
+    'actionAdmin': 'access_admin',
+    'actionManager': 'access_manager',
+    'actionEmployee': 'access_Employee'
 }

@@ -54,7 +54,8 @@ module.exports = function(passport) {
 
             // check to see if theres already a user with that email
             if (user) {
-                return done(null, false, req.flash('signupMessage', 'That email is already taken.'));
+                //return done(null, false, req.flash('signupMessage', 'That email is already taken.'));
+                return done(null, false, 409);
             } else {
 
                 // if there is no user with that email
@@ -67,7 +68,7 @@ module.exports = function(passport) {
                 // TODO: lechDev for now lets hardcode default vaules,
                 // but need to change later.
                 newUser.local.lang     = 'en-us';
-                newUser.local.role     = 'manager';
+                newUser.local.role     = 'admin';
                 //newUser.local.group    = 'default';
                 newUser.local.group    = 'acc_1_out_for_service';
                 newUser.local.companyId = '5986b8180a8ea07f6155858d';
@@ -111,12 +112,14 @@ module.exports = function(passport) {
                 return done(err);
 
             // if no user is found, return the message
-            if (!user)
-                return done(null, false, req.flash('loginMessage', 'No user found.')); // req.flash is the way to set flashdata using connect-flash
+            if (!user) {
+                return done(null, false);
+            }
 
             // if the user is found but the password is wrong
-            if (!user.validPassword(password))
-                return done(null, false, req.flash('loginMessage', 'Oops! Wrong password.')); // create the loginMessage and save it to session as flashdata
+            if (!user.validPassword(password)) {
+                return done(null, false);
+            }
 
             // all is well, return successful user
             return done(null, user);
