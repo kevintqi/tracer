@@ -73,9 +73,9 @@ module.exports = function (app, passport) {
     // process the login form
     app.post('/login', passport.authenticate('local-login', {}), function (req, res) {
         if (req.isAuthenticated()) {
-            res.json("{ 'status': 'success' }");
+            res.json({'status': 'success'});
         } else {
-            res.status(500).send("Internal Server Error");
+            res.status(500).send({'status' : 'Internal Server Error'});
         }
     });
 
@@ -84,7 +84,7 @@ module.exports = function (app, passport) {
     // =====================================
     // process the signup form
     app.post('/signup', passport.authenticate('local-signup', {}), function (req, res) {
-        res.json("{ 'status': 'success' }");
+        res.json({'status': 'success'});
     });
 
     // =====================================
@@ -92,10 +92,7 @@ module.exports = function (app, passport) {
     // =====================================
     app.get('/logout', function (req, res) {
         req.logout();
-        const status = {
-            'msg': 'successful logout'
-        };
-        res.json(status);
+        res.json({'status': 'success'});
     });
 
     // =========================================
@@ -313,7 +310,7 @@ function isLoggedIn(req, res, next) {
         return next();
 
     if (req.originalUrl.startsWith('/api/')) {
-        return res.status(401).send('401, Unauthorized')
+        return res.status(401).send({'status':'401, Unauthorized'});
     }
     return true;
 }
