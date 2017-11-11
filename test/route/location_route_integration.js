@@ -107,11 +107,14 @@ describe('INTEGRATION TEST for JOB Requests: location_route_integration.js', () 
 });
 
 var logJson = {
-    "jobId": "5986b8180a8ea07f61558999",
-    "location": {
-        "lat": 34.1022,
-        "lng": -118.2737
-    }
+    "locationLogs": [{
+        "jobId": "5986b8180a8ea07f61558999",
+        "location": {
+            "lat": 34.1022,
+            "lng": -118.2737
+        },
+        "dateLog": 1510443461995
+    }]
 }
 
 //https://scotch.io/tutorials/test-a-node-restful-api-with-mocha-and-chai

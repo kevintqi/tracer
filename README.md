@@ -673,11 +673,24 @@ https://localhost:3000/location_logs
 ### Input Data
 ```json
 {
-   "jobId": "5986b8180a8ea07f61558999",
-   "location": {
-      "lat": 800.3333,
-      "lng": -1.7331
-   }
+    "locationLogs": [
+        {
+           "jobId": "5986b8180a8ea07f61558999",
+            "location": {
+               "lat": 34.1022,
+               "lng": -118.2737
+            },
+            "dateLog": 1510443849817
+        },
+        {
+           "jobId": "5986b8180a8ea07f61558999",
+           "location": {
+               "lat": 34.77,
+               "lng": -118.77
+            },
+            "dateLog": 1510443849817
+        }
+    ]
 }
 ```
 

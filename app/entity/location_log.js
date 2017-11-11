@@ -51,13 +51,21 @@ const locationLog = {
                 data = JSON.parse(data);
             }
 
-            const newLog = new LocationLogModel();
-            copyCompanyId_(newLog, companyId);
-            copy_(data, newLog);
+            if (!Array.isArray(data.locationLogs)) {
+                reject("Wrong arguments: not an array");
+            }
 
-            newLog.save(function (err) {
-                if (err) return reject(err);
-                return resolve({ 'dateLog':  newLog.dateLog });
+            data.locationLogs.forEach(function (location) {
+                const newLog = new LocationLogModel();
+                copyCompanyId_(newLog, companyId);
+                copy_(location, newLog);
+
+                newLog.save(function (err) {
+                    if (err) return reject(err);
+                    return resolve({
+                        'dateLog': newLog.dateLog
+                    });
+                });
             });
         });
     },
