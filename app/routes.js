@@ -240,7 +240,7 @@ module.exports = function (app, passport) {
      *       500:
      *         description: Generic error
      */
-    app.patch('/api/job/:job_id/update', jobDispatcher.updateJob);
+    app.put('/api/job/:job_id/update', jobDispatcher.updateJob);
 
     /**
      * @swagger

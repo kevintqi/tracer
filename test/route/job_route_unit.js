@@ -108,14 +108,14 @@ describe('UNIT TEST for JOB Requests: job_route_unit.js', () => {
     });
 
     var assigneeId = '2222b8180a8ea07f61551111';
-    it('it should (PATCH) update job based on job id (/job/<job_id>/update)', (done) => {
+    it('it should (PUT) update job based on job id (/job/<job_id>/update)', (done) => {
         const retJson = JSON.parse(getJob());
         retJson.assignee = assigneeId;
         const taskMapperMock = sinon.mock(taskMapper.updateJob);
         taskMapperMock.expects('fnc').once().returns(
             Promise.resolve(JSON.stringify(retJson)));
         chai.request(server)
-            .patch('/api/job/123/update')
+            .put('/api/job/123/update')
             .send({
                 assignee: assigneeId
             })

@@ -84,7 +84,7 @@ describe('INTEGRATION TEST for JOB Requests: job_route_integration.js', () => {
     });
 
 
-    it('it should PATCH (Assignment)', (done) => {
+    it('it should PUT (Assignment)', (done) => {
         var assigneeId = '2222b8180a8ea07f61551111';
         var options = {
             'companyId': '5986b8180a8ea07f6155858d',
@@ -95,7 +95,7 @@ describe('INTEGRATION TEST for JOB Requests: job_route_integration.js', () => {
         job.create(options).then(data => {
             const jobObj = data;
             chai.request(server)
-                .patch('/api/job/' + jobObj.jobId + '/update')
+                .put('/api/job/' + jobObj.jobId + '/update')
                 .send({
                     assignee: assigneeId
                 })
@@ -123,7 +123,7 @@ describe('INTEGRATION TEST for JOB Requests: job_route_integration.js', () => {
     });
 
 
-    it('it should PATCH (Status)', (done) => {
+    it('it should PUT (Status)', (done) => {
         var assigneeId = '2222b8180a8ea07f61551111';
         var options = {
             'companyId': '5986b8180a8ea07f6155858d',
@@ -134,7 +134,7 @@ describe('INTEGRATION TEST for JOB Requests: job_route_integration.js', () => {
         job.create(options).then(data => {
             const jobObj = data
             chai.request(server)
-                .patch('/api/job/' + jobObj.jobId + '/update')
+                .put('/api/job/' + jobObj.jobId + '/update')
                 .send({
                     'status': 'Done',
                     'statusIcon': 'images/check.png',

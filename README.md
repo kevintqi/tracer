@@ -468,7 +468,7 @@ https://localhost:3000/job
 <!-- *************************************************************************************************************-->
 <!-- *************************************************************************************************************-->
 
-## PATCH updates a job based on company id. 
+## PUT updates a job based on company id. 
 Updates a job based on a company id.  <br>
 `/job/<job_id>/update`
 
