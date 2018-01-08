@@ -1,13 +1,13 @@
 // config/passport.js
 
 // load all the things we need
-var LocalStrategy   = require('passport-local').Strategy;
+var LocalStrategy = require('passport-local').Strategy;
 
 // load up the user model
-var User            = require('../app/model/user');
+var User = require('../app/model/user');
 
 // expose this function to our app using module.exports
-module.exports = function(passport) {
+module.exports = function (passport) {
 
     // =========================================================================
     // passport session setup ==================================================
@@ -16,13 +16,13 @@ module.exports = function(passport) {
     // passport needs ability to serialize and unserialize users out of session
 
     // used to serialize the user for the session
-    passport.serializeUser(function(user, done) {
+    passport.serializeUser(function (user, done) {
         done(null, user.id);
     });
 
     // used to deserialize the user
-    passport.deserializeUser(function(id, done) {
-        User.findById(id, function(err, user) {
+    passport.deserializeUser(function (id, done) {
+        User.findById(id, function (err, user) {
             done(err, user);
         });
     });
@@ -34,97 +34,105 @@ module.exports = function(passport) {
     // by default, if there was no name, it would just be called 'local'
 
     passport.use('local-signup', new LocalStrategy({
-        // by default, local strategy uses username and password, we will override with email
-        usernameField : 'email',
-        passwordField : 'password',
-        passReqToCallback : true // allows us to pass back the entire request to the callback
-    },
-    function(req, email, password, done) {
+            // by default, local strategy uses username and password, we will override with email
+            usernameField: 'email',
+            passwordField: 'password',
+            passReqToCallback: true // allows us to pass back the entire request to the callback
+        },
+        function (req, email, password, done) {
 
-        // asynchronous
-        // User.findOne wont fire unless data is sent back
-        process.nextTick(function() {
+            // asynchronous
+            // User.findOne wont fire unless data is sent back
+            process.nextTick(function () {
 
-        // find a user whose email is the same as the forms email
-        // we are checking to see if the user trying to login already exists
-        User.findOne({ 'local.email' :  email }, function(err, user) {
-            // if there are any errors, return the error
-            if (err)
-                return done(err);
-
-            // check to see if theres already a user with that email
-            if (user) {
-                //return done(null, false, req.flash('signupMessage', 'That email is already taken.'));
-                return done(null, false, 409);
-            } else {
-
-                // if there is no user with that email
-                // create the user
-                var newUser            = new User();
-
-                // set the user's local credentials
-                newUser.local.email    = email;
-                newUser.local.password = newUser.generateHash(password);
-                // TODO: lechDev for now lets hardcode default vaules,
-                // but need to change later.
-                newUser.local.lang     = 'en-us';
-                newUser.local.role     = 'admin';
-                //newUser.local.group    = 'default';
-                newUser.local.group    = 'acc_1_out_for_service';
-                newUser.local.companyId = '5986b8180a8ea07f6155858d';
-
-                // save the user
-                newUser.save(function(err) {
+                // find a user whose email is the same as the forms email
+                // we are checking to see if the user trying to login already exists
+                User.findOne({
+                    'local.email': email
+                }, function (err, user) {
+                    // if there are any errors, return the error
                     if (err)
-                        throw err;
-                    return done(null, newUser);
+                        return done(err);
+
+                    // check to see if theres already a user with that email
+                    if (user) {
+                        //return done(null, false, req.flash('signupMessage', 'That email is already taken.'));
+                        return done(null, false, 409);
+                    } else {
+
+                        // if there is no user with that email
+                        // create the user
+                        var newUser = new User();
+
+                        // set the user's local credentials
+                        newUser.local.email = email;
+                        newUser.local.password = newUser.generateHash(password);
+
+                        // (value) is a way of checking a truthy value or not
+                        if ((req.body.role) && (req.body.lang) && (req.body.group) &&
+                            (req.body.companyId)) {
+                            newUser.local.lang = req.body.lang;
+                            newUser.local.role = req.body.role;
+                            newUser.local.group = req.body.group;
+                            newUser.local.companyId = req.body.companyId;
+                        } else {
+                            return done(null, false, 400);
+                        }
+
+                        // save the user
+                        newUser.save(function (err) {
+                            if (err)
+                                throw err;
+                            return done(null, newUser);
+                        });
+                    }
+
                 });
-            }
 
-        });    
+            });
 
-        });
-
-    }));
+        }));
 
 
 
 
-     // =========================================================================
+    // =========================================================================
     // LOCAL LOGIN =============================================================
     // =========================================================================
     // we are using named strategies since we have one for login and one for signup
     // by default, if there was no name, it would just be called 'local'
 
     passport.use('local-login', new LocalStrategy({
-        // by default, local strategy uses username and password, we will override with email
-        usernameField : 'email',
-        passwordField : 'password',
-        passReqToCallback : true // allows us to pass back the entire request to the callback
-    },
-    function(req, email, password, done) { // callback with email and password from our form
+            // by default, local strategy uses username and password, we will override with email
+            usernameField: 'email',
+            passwordField: 'password',
+            passReqToCallback: true // allows us to pass back the entire request to the callback
+        },
+        function (req, email, password, done) { // callback with email and password from our form
 
-        // find a user whose email is the same as the forms email
-        // we are checking to see if the user trying to login already exists
-        User.findOne({ 'local.email' :  email }, function(err, user) {
-            // if there are any errors, return the error before anything else
-            if (err)
-                return done(err);
+            // find a user whose email is the same as the forms email
+            // we are checking to see if the user trying to login already exists
+            User.findOne({
+                'local.email': email
+            }, function (err, user) {
+                // if there are any errors, return the error before anything else
+                if (err)
+                    return done(err);
 
-            // if no user is found, return the message
-            if (!user) {
-                return done(null, false);
-            }
+                // if no user is found, return the message
+                if (!user) {
+                    return done(null, false);
+                }
 
-            // if the user is found but the password is wrong
-            if (!user.validPassword(password)) {
-                return done(null, false);
-            }
+                // if the user is found but the password is wrong
+                if (!user.validPassword(password)) {
+                    return done(null, false);
+                }
 
-            // all is well, return successful user
-            return done(null, user);
-        });
+                // all is well, return successful user
+                return done(null, user);
+            });
 
-    }));
+        }));
 
 };
